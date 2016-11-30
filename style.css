@@ -1,0 +1,27 @@
+html, body {
+  height: 100%;
+  overflow: hidden;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.view {
+  border: 1px #ddd solid;
+}
+
+#filter-view {
+}
+
+#mapping-view {
+}
+
+#plot-view {
+}
+
+#detail-view {
+}
+
+#history-view {
+}
+
+#citation-view {
+}
