@@ -6,22 +6,34 @@ html, body {
 
 .view {
   border: 1px #ddd solid;
+  display: relative;
 }
 
 #filter-view {
+  height: 40%;
 }
 
 #mapping-view {
+
+}
+
+#selected-view {
+  height: 60%;
 }
 
 #plot-view {
+  height: 100%;
 }
 
 #detail-view {
-}
-
-#history-view {
+  height: 40%;
 }
 
 #citation-view {
+  height: 60%;
+}
+
+.padding-0 {
+  padding: 0 !important;
+  margin: 0 !important;
 }

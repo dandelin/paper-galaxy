@@ -2,6 +2,34 @@
   <head>
     <title>PaperSense</title>
     <meta charset="UTF-8">
+  </head>
+  <body>
+    <div id="left" class="column col-md-2 padding-0">
+      <div class="view" id="filter-view">
+        filter
+      </div>
+      <div class="view" id="mapping-view">
+        mapping
+      </div>
+      <div class="view" id="selected-view">
+        selected
+      </div>
+    </div>
+    <div id="center" class="column col-md-7 padding-0">
+      <div class="view" id="plot-view">
+      </div>
+    </div>
+    <div id="right" class="column col-md-3 padding-0">
+      <div class="view" id="detail-view">
+        detail
+      </div>
+      <div class="view" id="citation-view">
+        citation
+      </div>
+    </div>
+
+    <!-- jquery -->
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
     <!-- bootstrap -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
@@ -10,32 +38,8 @@
     <script src="https://d3js.org/d3.v3.min.js"></script>
 
     <link rel="stylesheet" href="./style.css">
+    <script src="./model.js"></script>
+    <script src="./plot-view.js"></script>
     <script src="./main.js"></script>
-  </head>
-  <body>
-    <div id="left" class="col-md-3 nopadding">
-      <div class="view" id="filter-view">
-        filter
-      </div>
-      <div class="view" id="mapping-view">
-        mapping
-      </div>
-    </div>
-    <div id="center" class="col-md-6 nopadding">
-      <div class="view" id="plot-view">
-        plot
-      </div>
-    </div>
-    <div id="right" class="col-md-3 nopadding">
-      <div class="view" id="detail-view">
-        detail
-      </div>
-      <div class="view" id="history-view">
-        history
-      </div>
-      <div class="view" id="citation-view">
-        citation
-      </div>
-    </div>
   </body>
 </html>
