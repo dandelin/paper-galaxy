@@ -2,7 +2,7 @@
 var Model = (function() {
   return {
     init: function(callback) {
-      var JSON_FILENAME = "./chi_new.json";
+      var JSON_FILENAME = "./chi_simple_new.json";
       var paperList = [];
       var tags = {};
       var tagList = [];
