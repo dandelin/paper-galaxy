@@ -2,8 +2,8 @@ var PlotView = (function() {
   return {
     init: function(data) {
       var margin = {top: 20, right: 20, bottom: 20, left: 20};
-      var width = 1000 - margin.left - margin.right;
-      var height = 800 - margin.top - margin.bottom;
+      var width = document.getElementById('plot-view').offsetWidth - margin.left - margin.right;
+      var height = document.getElementById('plot-view').offsetHeight - margin.top - margin.bottom;
       var x = d3.scale.linear().domain(d3.extent(data, function(d) { return d.vec2[0]; })).range([0, width]);
       var y = d3.scale.linear().domain(d3.extent(data, function(d) { return d.vec2[1]; })).range([0, height]);
       var r = d3.scale.linear().domain(d3.extent(data, function(d) { return d.citation_count; })).range([2, 6]);
