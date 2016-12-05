@@ -1,25 +1,35 @@
 "use strict";
+function filterApplier(d) {
+  return controller.isFiltered(d) ? 0.15 : 1;
+}
+
+function highlightApplier(d) {
+  return controller.isFiltered(d) ? null : "yellow";
+}
+
 var PlotView = (function() {
   var makeLasso = function(scope) {
 
       var lasso_start = function() {
           lasso.items()
-              .style('opacity', 0.15);
+              .style('opacity', 0.15)
+              .style('stroke', null);
       };
 
       var lasso_draw = function() {
           lasso.items().filter(function(d) {return d.possible===true})
-              .style('opacity', 1);
+              .style('opacity', filterApplier);
 
           lasso.items().filter(function(d) {return d.possible===false})
               .style('opacity', 0.15);
       };
 
       var lasso_end = function() {
-          lasso.items()
-              .style("opacity", 1);
+          lasso.items().style('opacity', null);
 
-          var selected = lasso.items().filter(function(d) {return d.selected===true});
+          var selected = lasso.items().filter(function(d) {return d.selected===true})
+              .style('stroke-width', 1)
+              .style('stroke', highlightApplier);
           SelectedView.updateSelectedPapers(selected);
       };
 
@@ -82,9 +92,7 @@ var PlotView = (function() {
       var papers = d3.selectAll(".paper").transition()
         .duration(500)
         .ease("quad")
-        .attr("opacity", function(d) {
-          return controller.isFiltered(d) ? 0.1 : 1;
-        });
+        .attr("opacity", filterApplier);
     }
 
   };

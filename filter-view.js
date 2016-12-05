@@ -6,7 +6,6 @@ function FilterView() {
 
 FilterView.prototype = {
   init: function (rangeList) {
-    console.log("filterView init()");
     filterView.addSlider("Year", rangeList[0], this.yearFilter);
     filterView.addSlider("Citation Count", rangeList[1], this.citFilter);
     filterView.addSlider("Reference Count", rangeList[2], this.refFilter);
