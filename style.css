@@ -11,6 +11,7 @@ html, body {
 
 #filter-view {
   height: 40%;
+  min-height: 350px;
 }
 
 #mapping-view {
@@ -88,3 +89,95 @@ html, body {
   margin-right: 15px;
   margin-bottom: 20px;
 }
+
+.searchFilter {
+  margin-left: 15px;
+  margin-right: 15px;
+  margin-bottom: 20px;
+}
+
+input, button {
+	font: inherit;
+	text-shadow: inherit;
+}
+
+.searchFilter > input {
+  width: 100%;
+	padding: .1em .3em;
+	border: 0;
+	border: 1px solid hsl(35, 80%, 60%);
+	background: hsla(0,0%,100%,.2);
+	border-radius: .3em;
+	box-shadow: .05em .1em .3em rgba(0,0,0,.3) inset;
+  display: block;
+}
+
+.searchFilter > ul {
+  position: relative;
+  left: 0;
+  z-index: 4;
+  min-width: 100%;
+  box-sizing: border-box;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  background: #fff;
+}
+
+.awesosearchFiltermplete > ul:empty {
+    display: none;
+}
+
+.searchFilter > ul {
+	border-radius: .3em;
+	margin: .2em 0 0;
+	background: hsla(0,0%,100%,.9);
+	background: linear-gradient(to bottom right, white, hsla(0,0%,100%,.8));
+	border: 1px solid rgba(0,0,0,.3);
+	box-shadow: .05em .2em .6em rgba(0,0,0,.2);
+	text-shadow: none;
+}
+
+.searchFilter > ul:before {
+  content: "";
+  position: absolute;
+  top: -.43em;
+  left: 1em;
+  width: 0; height: 0;
+  padding: .4em;
+  background: white;
+  border: inherit;
+  border-right: 0;
+  border-bottom: 0;
+  -webkit-transform: rotate(45deg);
+  transform: rotate(45deg);
+}
+
+.searchFilter > ul > li {
+  position: relative;
+  padding: .2em .5em;
+  cursor: pointer;
+}
+
+.searchFilter > ul > li:hover {
+  background: hsl(200, 40%, 80%);
+  color: black;
+}
+
+.searchFilter > ul > li[aria-selected="true"] {
+  background: hsl(205, 40%, 40%);
+  color: white;
+}
+
+  .searchFilter mark {
+    background: hsl(65, 100%, 50%);
+  }
+  
+  .searchFilter li:hover mark {
+    background: hsl(68, 100%, 41%);
+  }
+  
+  .searchFilter li[aria-selected="true"] mark {
+    background: hsl(86, 100%, 21%);
+    color: inherit;
+  }

@@ -90,7 +90,7 @@ var PlotView = (function() {
 
     refresh: function() {
       var papers = d3.selectAll(".paper").transition()
-        .duration(500)
+        .duration(200)
         .ease("quad")
         .attr("opacity", filterApplier);
     }
