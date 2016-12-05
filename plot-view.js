@@ -81,9 +81,12 @@ var PlotView = (function() {
         .attr("class", "paper")
         .attr("cx", function(d) { return x(d.vec2[0]); })
         .attr("cy", function(d) { return y(d.vec2[1]); })
-        .attr("r", function(d) { return r(d.citation_count); });
-      lasso.items(d3.selectAll(".paper"))
+        .attr("r", function(d) { return r(d.citation_count); })
+        .on("click", function(d) {
+          DetailView.update(d);
+        });
 
+      lasso.items(d3.selectAll(".paper"))
       paperGroup.call(lasso);
     },
 
