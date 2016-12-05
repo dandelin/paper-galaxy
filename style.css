@@ -60,3 +60,10 @@ html, body {
   fill:#3399FF;
   fill-opacity:.5;
 }
+
+/* Filter styles */
+.sliderFilter {
+  margin-left: 15px;
+  margin-right: 15px;
+  margin-bottom: 20px;
+}

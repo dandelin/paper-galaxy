@@ -35,6 +35,16 @@ var PlotView = (function() {
       });
       
       svg.call(lasso);
+    },
+
+    refresh: function() {
+      var papers = d3.selectAll(".paper").transition()
+        .duration(500)
+        .ease("quad")
+        .attr("opacity", function(d) {
+          return controller.isFiltered(d) ? 0.1 : 1;
+        });
     }
+
   };
 })();
