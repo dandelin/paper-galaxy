@@ -44,7 +44,9 @@ var SelectedView = (function() {
           d.object.setAttribute('fill', 'red');
       }).on('mouseout', function(d){
           d.object.setAttribute('fill', 'black');
-      })
+      }).on('click', function(d){
+        DetailView.update(d.data);
+      });
     }
   };
 })();

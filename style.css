@@ -27,6 +27,27 @@ html, body {
 
 #detail-view {
   height: 40%;
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding: 5px;
+}
+
+#detail-view .group {
+  margin-bottom: 3px;
+}
+
+#detail-view .head {
+  font-weight: bold;
+  font-size: 12px;
+}
+
+#detail-view .content {
+  font-size: 11px;
+}
+
+#detail-view .content .label {
+  margin: 1px;
+  display: inline-block;
 }
 
 #citation-view {

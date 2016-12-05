@@ -1,0 +1,4 @@
+var MappingView = (function() {
+  return {
+  };
+})();

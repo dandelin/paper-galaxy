@@ -5,5 +5,6 @@
   Model.init(function(paperList, tagList, rangeList) {
     PlotView.init(paperList);
     filterView.init(rangeList)
+    DetailView.init();
   });
 })(this);
