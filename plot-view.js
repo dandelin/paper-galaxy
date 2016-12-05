@@ -42,7 +42,6 @@ var PlotView = (function() {
       // 라소의 정의
       var lasso = scope.d3.lasso()
           .area(lasso_area) // 영역의 정의
-          .items(scope.d3.selectAll(".paper"))
           .on('start', lasso_start)
           .on('draw', lasso_draw)
           .on('end', lasso_end);
@@ -66,18 +65,7 @@ var PlotView = (function() {
         .style("display", "block")
         .style("margin", "auto");
 
-      var paperG = svg.append("g");
 
-      var papers = paperG.selectAll(".paper")
-        .data(data);
-
-      papers.enter()
-        .append("circle")
-        .attr("class", "paper")
-        .attr("cx", function(d) { return x(d.vec2[0]); })
-        .attr("cy", function(d) { return y(d.vec2[1]); })
-        .attr("r", function(d) { return r(d.citation_count); });
-        
       var lasso = makeLasso({
         'd3': d3,
         'svg': svg,
@@ -85,7 +73,18 @@ var PlotView = (function() {
         'height': height
       });
       
-      svg.call(lasso);
+      var paperGroup = svg.append("g");
+      var papers = paperGroup.selectAll(".paper")
+      papers.data(data)
+        .enter()
+      .append("circle")
+        .attr("class", "paper")
+        .attr("cx", function(d) { return x(d.vec2[0]); })
+        .attr("cy", function(d) { return y(d.vec2[1]); })
+        .attr("r", function(d) { return r(d.citation_count); });
+      lasso.items(d3.selectAll(".paper"))
+
+      paperGroup.call(lasso);
     },
 
     refresh: function() {
