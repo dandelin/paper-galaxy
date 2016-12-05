@@ -23,8 +23,14 @@ Controller.prototype = {
         console.log(text);
     },
 
-    updateKeyword: function(keyword) {
-        console.log(keyword);
+    onKeywordInput: function(keyword) {
+        var array = [];
+        filterView.searchCategories.forEach(function(category) {
+            var count = 23
+            array.push(category + ":" + keyword + " (" + count + ")");
+        });
+        console.log(array);
+        filterView.updatePopup(array);
     }
 }
 
