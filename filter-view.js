@@ -21,7 +21,7 @@ FilterView.prototype = {
       .attr("class", "slider")
       .call(d3.slider().axis(true).min(range.min).max(range.max).step(1).value([range.min,range.max]).on("slide", function(evt, value) {
 
-        // apply filter to the plot
+        // call controller to update filter
         filter.min = arrayToMinMax(value).min;
         filter.max = arrayToMinMax(value).max;
         controller.updateFilter();
