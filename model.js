@@ -7,6 +7,7 @@ var Model = (function() {
       var tags = {};
       var tagList = [];
       var rangeList = [];
+      var authorList = [];
       d3.json(JSON_FILENAME, function(error, json) {
         // convert json object to paperList
         var paperIds = Object.keys(json);
@@ -22,13 +23,22 @@ var Model = (function() {
           paperList.push(json[paperId]);
         });
 
-        // calculate author tags frequencies
+        // pre-process papers
         paperList.forEach(function(d) {
+          // calculate author tags frequencies
           d.author_tags.forEach(function(tag) {
             if(tag in tags) { tags[tag]++; }
             else { tags[tag] = 1; }
           });
+
+          // get all unique author list
+          d.authors.forEach(function(author) {
+            authorList.pushIfNotExist(author, function(a) {
+              return a.id === author.id;
+            });
+          });
         });
+        
         Object.keys(tags).forEach(function(key) {
           tagList.push({"tag": key, "freq": tags[key]});
         });
@@ -41,7 +51,7 @@ var Model = (function() {
           getMinMax(json, "reference_count")];
 
         // execute callback function
-        callback(json, paperList, tagList, rangeList);
+        callback(json, paperList, tagList, rangeList, authorList);
       });
     }
   };

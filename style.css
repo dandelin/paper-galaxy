@@ -91,6 +91,7 @@ html, body {
 }
 
 .searchFilter {
+  min-height: 100px;
   margin-left: 15px;
   margin-right: 15px;
   margin-bottom: 20px;
@@ -112,7 +113,33 @@ input, button {
   display: block;
 }
 
-.searchFilter > ul {
+.popupBox {
+  position: absolute;
+  min-width: 80%;
+
+}
+
+.search_result {
+  float: left;
+  min-width: 100%
+}
+
+.search_details {
+  top: 20px;
+  left: 250px;
+  max-width: 40%;
+  max-height: 70%;
+  overflow-y: scroll;
+  position: absolute;
+  z-index: 5;
+  box-shadow: .05em .2em .6em rgba(0,0,0,.2);
+}
+
+.search_result .popupElm .badge {
+  margin-left: 10px;
+}
+
+.search_result > ul {
   position: relative;
   left: 0;
   z-index: 4;
@@ -124,11 +151,11 @@ input, button {
   background: #fff;
 }
 
-.awesosearchFiltermplete > ul:empty {
+.search_result > ul:empty {
     display: none;
 }
 
-.searchFilter > ul {
+.search_result > ul {
 	border-radius: .3em;
 	margin: .2em 0 0;
 	background: hsla(0,0%,100%,.9);
@@ -138,7 +165,7 @@ input, button {
 	text-shadow: none;
 }
 
-.searchFilter > ul:before {
+.search_result > ul:before {
   content: "";
   position: absolute;
   top: -.43em;
@@ -153,31 +180,31 @@ input, button {
   transform: rotate(45deg);
 }
 
-.searchFilter > ul > li {
+.search_result > ul > li {
   position: relative;
   padding: .2em .5em;
   cursor: pointer;
 }
 
-.searchFilter > ul > li:hover {
+.search_result > ul > li:hover {
   background: hsl(200, 40%, 80%);
   color: black;
 }
 
-.searchFilter > ul > li[aria-selected="true"] {
+.search_result > ul > li[aria-selected="true"] {
   background: hsl(205, 40%, 40%);
   color: white;
 }
 
-  .searchFilter mark {
+  .search_result mark {
     background: hsl(65, 100%, 50%);
   }
   
-  .searchFilter li:hover mark {
+  .search_result li:hover mark {
     background: hsl(68, 100%, 41%);
   }
   
-  .searchFilter li[aria-selected="true"] mark {
+  .search_result li[aria-selected="true"] mark {
     background: hsl(86, 100%, 21%);
     color: inherit;
   }

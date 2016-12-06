@@ -1,4 +1,7 @@
 function Controller() {
+    this.paperList;
+    this.tagList;
+    this.authorList;
     this.filters;
     this.currentPaper;
 }
@@ -10,7 +13,13 @@ Controller.prototype = {
       CitationView.update(newPaper);
     },
 
-    updateFilter: function() {
+    init: function(paperList, tagList, authorList) {
+        this.paperList = paperList;
+        this.tagList = tagList;
+        this.authorList = authorList;
+    },
+
+    notifyFilterChange: function() {
         this.filters = filterView.getFilters();
         PlotView.refresh();
     },
@@ -32,13 +41,48 @@ Controller.prototype = {
 
     onKeywordInput: function(keyword) {
         var array = [];
-        filterView.searchCategories.forEach(function(category) {
-            var count = 23
-            array.push(category + ":" + keyword + " (" + count + ")");
+        filterView.getSearchCategories().forEach(function(category) {
+            var lists = controller.searchKeyword(keyword);
+            array.push({
+                "category": category,
+                "keyword": keyword,
+                "list": lists[category]
+            });
         });
-        console.log(array);
         filterView.updatePopup(array);
+    },
+
+    searchKeyword: function(keyword) {
+        var results = {};
+        var lowerCaseKeyword = keyword.toLowerCase();
+        
+        // search title
+        results["title"] = [];
+        this.paperList.forEach(function(paper) {
+            if (paper.title.toLowerCase().includes(lowerCaseKeyword)) {
+                results["title"].push(paper.title);
+            }
+        });
+
+        // search authors
+        results["author"] = [];
+        this.authorList.forEach(function(author) {
+            if (author.name.toLowerCase().includes(lowerCaseKeyword)) {
+                results["author"].push(author.name);
+            }
+        });
+
+        // search keywords
+        results["keyword"] = [];
+        this.tagList.forEach(function(tag) {
+            if(tag.tag.toLowerCase().includes(lowerCaseKeyword)) {
+                results["keyword"].push(tag.tag);
+            }
+        });
+
+        return results;
     }
+
 }
 
 var controller = new Controller();
