@@ -2,21 +2,24 @@
 var Model = (function() {
   return {
     init: function(callback) {
-      var JSON_FILENAME = "./chi_simple_new_abstract.json";
+      var JSON_FILENAME = "./chi_simple_new_abstract2.json";
       var paperList = [];
       var tags = {};
       var tagList = [];
       var rangeList = [];
       d3.json(JSON_FILENAME, function(error, json) {
-        // convert json objects to paperList
-        Object.keys(json).forEach(function(key) {
-          json[key]["id"] = key;
-          json[key].vec2[0] = parseFloat(json[key].vec2[0]);
-          json[key].vec2[1] = parseFloat(json[key].vec2[1]);
-          json[key].citation_count = parseInt(json[key].citation_count);
-          json[key].year = parseInt(json[key].publication_date.split("-")[0]);
-          json[key].reference_count = json[key].references.length;
-          paperList.push(json[key]);
+        // convert json object to paperList
+        var paperIds = Object.keys(json);
+        paperIds.forEach(function(paperId) {
+          json[paperId]["id"] = paperId;
+          json[paperId].vec2[0] = parseFloat(json[paperId].vec2[0]);
+          json[paperId].vec2[1] = parseFloat(json[paperId].vec2[1]);
+          json[paperId].citation_count = parseInt(json[paperId].citation_count);
+          json[paperId].year = parseInt(json[paperId].publication_date.split("-")[0]);
+          json[paperId].reference_count = json[paperId].references.length;
+          json[paperId].cited_by = json[paperId].cited_by.filter(function(d) { return paperIds.includes(d); });
+          json[paperId].references = json[paperId].references.filter(function(d) { return paperIds.includes(d); });
+          paperList.push(json[paperId]);
         });
 
         // calculate author tags frequencies
@@ -38,7 +41,7 @@ var Model = (function() {
           getMinMax(json, "reference_count")];
 
         // execute callback function
-        callback(paperList, tagList, rangeList);
+        callback(json, paperList, tagList, rangeList);
       });
     }
   };
