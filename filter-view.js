@@ -22,17 +22,13 @@ FilterView.prototype = {
 
     this.searchPopup = d3.select(".searchFilter").append('div')
       .attr("class", "popupBox")
+    .append('div')
+      .attr("class", "search_result")
       .style("display", "none");
     // this.searchPopup.append('ul')
       
     
     this.searchCategories.forEach(function(category) {
-      // // init search popup
-      // filterView.searchPopup.select(".popupList").append('li')
-      //   .attr("class", "popupElm")
-      //   .text(category).on("click", function() {
-      //   controller.onKeywordClick(d3.select(this).text());
-      // });
       // init keywordFilter
       filterView.keywordFilter[category] = [];
     });
@@ -42,14 +38,42 @@ FilterView.prototype = {
     filterView.addSlider("Reference Count", rangeList[2], this.refFilter);
   },
 
-  updatePopup: function(array) {
+  updatePopup: function(searchResult) {
     var element = this.searchPopup.html("").append("ul")
       .selectAll("li")
-      .data(array)
+      .data(searchResult)
     .enter().append("li")
       .attr("class", "popupElm")
       .on("click", function() {
-        controller.onKeywordClick(d3.select(this).text());
+        controller.onKeywordClick(d3.select(this).select("span").text());
+      })
+      .on("mouseover", function(d, i) {
+        var offsetWidth = document.getElementById("filter-view").offsetWidth;
+        var detailDiv = d3.select("body").append('div')
+          .attr("class", "search_details panel panel-default")
+          .style("opacity", "0")
+          .style("left", (offsetWidth+10) + "px");
+        detailDiv.append("ul")
+          .attr("class", "list-group")
+          .selectAll("li")
+          .data(d.list)
+          .enter().append("li")
+          .attr("class", "detailElm list-group-item")
+          .text(function(elm) {
+            return elm;
+          });
+        detailDiv.transition()
+          .duration(500)
+          .ease("quad")
+          .style("opacity", "1");
+      })
+      .on("mouseout", function() {
+        var detailDiv = d3.select("body").selectAll(".search_details");
+        detailDiv.transition()
+          .duration(100)
+          .ease("quad")
+          .style("opacity", "0");
+        detailDiv.remove();
       });
 
     element.append("span")
@@ -57,7 +81,7 @@ FilterView.prototype = {
       .text(function(d) { return d.category + ": " + d.keyword});
     element.append("span")
       .attr("class", "badge")
-      .text(function(d) { return d.count; });
+      .text(function(d) { return d.list.length; });
   },
 
   addSlider: function(text, range, filter) {
@@ -92,6 +116,10 @@ FilterView.prototype = {
       citFilter: this.citFilter,
       refFilter: this.refFilter
     }
+  },
+
+  getSearchCategories: function() {
+    return this.searchCategories;
   }
 }
 
