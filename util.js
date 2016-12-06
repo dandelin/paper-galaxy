@@ -10,6 +10,7 @@ function getMinMax(json, key) {
 function arrayToMinMax(array) {
     return array[0] < array[1] ? {min : array[0], max: array[1]} : {min : array[1], max: array[0]} 
 }
+
 // check if an element exists in array using a comparer function
 // comparer : function(currentElement)
 Array.prototype.inArray = function(comparer) { 
@@ -21,8 +22,8 @@ Array.prototype.inArray = function(comparer) {
 
 // adds an element to the array if it does not already exist using a comparer 
 // function
-Array.prototype.pushIfNotExist = function(element) { 
-    if (!this.inArray(function(d) {return e === element})) {
+Array.prototype.pushIfNotExist = function(element, comparer) { 
+    if (!this.inArray(comparer)) {
         this.push(element);
     }
 }; 

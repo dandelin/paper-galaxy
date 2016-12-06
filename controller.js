@@ -1,9 +1,18 @@
 function Controller() {
+    this.paperList;
+    this.tagList;
+    this.authorList;
     this.filters;
 }
 
 Controller.prototype = {
-    updateFilter: function() {
+    init: function(paperList, tagList, authorList) {
+        this.paperList = paperList;
+        this.tagList = tagList;
+        this.authorList = authorList;
+    },
+
+    notifyFilterChange: function() {
         this.filters = filterView.getFilters();
         PlotView.refresh();
     },
@@ -27,11 +36,19 @@ Controller.prototype = {
         var array = [];
         filterView.searchCategories.forEach(function(category) {
             var count = 23
-            array.push(category + ":" + keyword + " (" + count + ")");
+            array.push({
+                "category": category,
+                "keyword": keyword,
+                "count": count
+            });
         });
-        console.log(array);
         filterView.updatePopup(array);
+    },
+
+    searchKeyword: function(keyword) {
+
     }
+
 }
 
 var controller = new Controller();
