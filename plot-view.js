@@ -50,7 +50,7 @@ var PlotView = (function() {
   };
 
   return {
-    init: function(data) {
+    init: function(data, tagList) {
       var margin = {top: 20, right: 20, bottom: 20, left: 20};
       var width = document.getElementById('plot-view').offsetWidth - margin.left - margin.right;
       var height = document.getElementById('plot-view').offsetHeight - margin.top - margin.bottom;
@@ -74,6 +74,9 @@ var PlotView = (function() {
       });
       
       var paperGroup = svg.append("g");
+
+      //var topTags = tagList.map(function(d) {return d.tag; }).slice(6,25);
+
       var papers = paperGroup.selectAll(".paper")
       papers.data(data)
         .enter()
@@ -82,8 +85,20 @@ var PlotView = (function() {
         .attr("cx", function(d) { return x(d.vec2[0]); })
         .attr("cy", function(d) { return y(d.vec2[1]); })
         .attr("r", function(d) { return r(d.citation_count); })
+        .attr("fill", "black")
+        //.attr("fill", function(d) {
+          //var color = d3.scale.category20().domain(topTags);
+          //var ret;
+          //d.author_tags.forEach(function(tag) {
+            //if(topTags.includes(tag)) {
+              //ret = color(tag);
+            //}
+          //});
+          //if(!ret) return "#eeeeee";
+          //else return ret;
+        //})
         .on("click", function(d) {
-          DetailView.update(d);
+          controller.updateCurrentPaper(d);
         });
 
       lasso.items(d3.selectAll(".paper"))

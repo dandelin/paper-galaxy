@@ -3,8 +3,7 @@
   // tagList: list of frequencies of each author tag
   // ranList: list of filter ranges (year, citCount, refCount)
   Model.init(function(paperList, tagList, rangeList) {
-    PlotView.init(paperList);
+    PlotView.init(paperList, tagList);
     filterView.init(rangeList)
-    DetailView.init();
   });
 })(this);

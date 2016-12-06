@@ -45,7 +45,7 @@ var SelectedView = (function() {
       }).on('mouseout', function(d){
           d.object.setAttribute('fill', 'black');
       }).on('click', function(d){
-        DetailView.update(d.data);
+        controller.updateCurrentPaper(d.data);
       });
     }
   };

@@ -1,8 +1,14 @@
 function Controller() {
     this.filters;
+    this.currentPaper;
 }
 
 Controller.prototype = {
+    updateCurrentPaper: function(newPaper) {
+      this.currentPaper = newPaper;
+      DetailView.update(newPaper);
+    },
+
     updateFilter: function() {
         this.filters = filterView.getFilters();
         PlotView.refresh();
