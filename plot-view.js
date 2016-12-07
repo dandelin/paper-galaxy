@@ -49,18 +49,20 @@ var PlotView = (function() {
         
         return lasso;
     };
-    var makeGraph = function(root_node, json, cited_by){
+    var makeGraph = function(){
         
         var children = [];
+        var root_node = controller.currentPaper;
+        var json = controller.paperObj;
 
         d3.selectAll('.paper')
             .filter(function(d){
-                return json[root_node.__data__.id].cited_by.includes(d.id);
+                return json[root_node.id].cited_by.includes(d.id);
             })
             .each(function(d){
                 var o = {
                     'id': d.id,
-                    'parent': root_node.__data__.id,
+                    'parent': root_node.id,
                     'cited_by': true
                 };
                 children.push(o);
@@ -68,12 +70,12 @@ var PlotView = (function() {
 
         d3.selectAll('.paper')
             .filter(function(d){
-                return json[root_node.__data__.id].references.includes(d.id);
+                return json[root_node.id].references.includes(d.id);
             })
             .each(function(d){
                 var o = {
                     'id': d.id,
-                    'parent': root_node.__data__.id,
+                    'parent': root_node.id,
                     'cited_by': false
                 };
                 children.push(o);
@@ -88,7 +90,6 @@ var PlotView = (function() {
             node.py = pcircle.attr('cy');
         });
 
-        console.log(children);
 
         var link = d3.select('#links').selectAll('line')
             .data(children, function(d){
@@ -104,6 +105,19 @@ var PlotView = (function() {
             .attr('stroke', function(d){
                 if(d.cited_by === true) return 'steelblue';
                 else return 'orange';
+            })
+            .attr('stroke-opacity', function(d){
+                var ret = d3.select('#p' + d.id).attr('opacity');
+                if(ret == null) return 1;
+                else return ret;
+            });
+
+        link
+            .attr('stroke-opacity', function(d){
+                var ret = d3.select('#p' + d.id).attr('opacity');
+                console.log(ret);
+                if(ret == null) return 1;
+                else return ret;
             });
 
         link.exit()
@@ -172,8 +186,8 @@ var PlotView = (function() {
                 .ease("quad")
                 .attr("opacity", filterApplier);
         },
-        drawGraph: function(node, json) {
-            makeGraph(node, json);
+        drawGraph: function() {
+            makeGraph();
         }
     };
 })();
