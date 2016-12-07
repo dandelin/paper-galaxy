@@ -2,15 +2,15 @@
 var SelectedView = (function() {
     var view = d3.select('#selected-view');
     var table = view.append('table');
-    var head_row = table.append('thead').append('tr').attr("class", "selected-header");
+    var head_row = table.append('thead').append('tr');
     var tbody = table.append('tbody');
     
-    head_row.append('th').text('Title').attr("class", "selected-title");
-    head_row.append('th').text('Citation Count').attr("class", "selected-citation-count");
+    head_row.append('th').text('Title');
+    head_row.append('th').text('Citation Count');
     
     return {
         updateSelectedPapers: function(selected) {
-            var columns = ['title', 'citation-count']
+            var columns = ['title', 'citation_count']
             var data = selected[0].map(function(d){
                 return {
                     data: d.__data__,
@@ -21,6 +21,7 @@ var SelectedView = (function() {
             data.sort(function(a, b){
                 return parseInt(b.data.citation_count) - parseInt(a.data.citation_count);
             });
+            console.log(data);
             
             var rows = tbody.selectAll('tr')
                 .data(data, function(d){
@@ -43,7 +44,6 @@ var SelectedView = (function() {
                 })
                 .enter()
                 .append('td')
-                .attr('class', function(d) { return "selected-"+d.column; })
                 .text(function(d){
                     return d.value;
                 });

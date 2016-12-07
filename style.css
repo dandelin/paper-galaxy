@@ -34,14 +34,6 @@ html, body {
     margin-bottom: 3px;
 }
 
-#selected-view .title {
-    width: 75%;
-}
-
-#selected-view .citation-count {
-    width: 25%;
-}
-
 #plot-view {
     height: 100%;
 }
