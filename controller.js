@@ -39,7 +39,11 @@ Controller.prototype = {
     },
 
     onKeywordClick: function(text) {
-        console.log(text);
+        var category = text.split(":")[0].trim();
+        var keyword = text.split(":")[1].trim();
+
+        filterView.addKeywordToFilter(category, keyword);
+        filterView.updateKeywordBox();
     },
 
     onKeywordInput: function(keyword) {
