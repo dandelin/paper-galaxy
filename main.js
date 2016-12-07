@@ -4,7 +4,7 @@
   // rangeList: list of filter ranges (year, citCount, refCount)
   Model.init(function(paperObj, paperList, tagList, rangeList, authorList) {
     PlotView.init(paperList, tagList);
-    controller.init(paperList, tagList, authorList);
+    controller.init(paperList, tagList, authorList, paperObj);
     filterView.init(rangeList)
     CitationView.init(paperObj);
   });

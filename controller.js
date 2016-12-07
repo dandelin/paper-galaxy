@@ -8,15 +8,16 @@ function Controller() {
 
 Controller.prototype = {
     updateCurrentPaper: function(newPaper) {
-      this.currentPaper = newPaper;
-      DetailView.update(newPaper);
-      CitationView.update(newPaper);
+        this.currentPaper = newPaper;
+        DetailView.update(newPaper);
+        CitationView.update(newPaper);
     },
 
-    init: function(paperList, tagList, authorList) {
+    init: function(paperList, tagList, authorList, paperObj) {
         this.paperList = paperList;
         this.tagList = tagList;
         this.authorList = authorList;
+        this.paperObj = paperObj;
     },
 
     notifyFilterChange: function() {
@@ -85,6 +86,10 @@ Controller.prototype = {
         });
 
         return results;
+    },
+
+    drawTree: function(node){
+        PlotView.drawGraph(node, this.paperObj);
     }
 
 }
