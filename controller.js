@@ -11,6 +11,7 @@ Controller.prototype = {
         this.currentPaper = newPaper;
         DetailView.update(newPaper);
         CitationView.update(newPaper);
+        PlotView.drawGraph();
     },
 
     init: function(paperList, tagList, authorList, paperObj) {
@@ -23,6 +24,7 @@ Controller.prototype = {
     notifyFilterChange: function() {
         this.filters = filterView.getFilters();
         PlotView.refresh();
+        if(this.currentPaper !== undefined) PlotView.drawGraph();
     },
 
     isFiltered: function(paper) { // true: filter out, false: show
