@@ -13,10 +13,11 @@ Controller.prototype = {
         CitationView.update(newPaper);
     },
 
-    init: function(paperList, tagList, authorList) {
+    init: function(paperList, tagList, authorList, paperObj) {
         this.paperList = paperList;
         this.tagList = tagList;
         this.authorList = authorList;
+        this.paperObj = paperObj;
     },
 
     notifyFilterChange: function() {
@@ -81,6 +82,10 @@ Controller.prototype = {
         });
 
         return results;
+    },
+
+    drawTree: function(node){
+        PlotView.drawGraph(node, this.paperObj);
     }
 
 }

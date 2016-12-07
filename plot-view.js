@@ -49,6 +49,66 @@ var PlotView = (function() {
         
         return lasso;
     };
+    var makeGraph = function(root_node, json, cited_by){
+        
+        var children = [];
+
+        d3.selectAll('.paper')
+            .filter(function(d){
+                return json[root_node.__data__.id].cited_by.includes(d.id);
+            })
+            .each(function(d){
+                var o = {
+                    'id': d.id,
+                    'parent': root_node.__data__.id,
+                    'cited_by': true
+                };
+                children.push(o);
+            });
+
+        d3.selectAll('.paper')
+            .filter(function(d){
+                return json[root_node.__data__.id].references.includes(d.id);
+            })
+            .each(function(d){
+                var o = {
+                    'id': d.id,
+                    'parent': root_node.__data__.id,
+                    'cited_by': false
+                };
+                children.push(o);
+            });
+
+        children.forEach(function(node){
+            var circle = d3.select('#p' + node.id);
+            var pcircle = d3.select('#p' + node.parent);
+            node.x = circle.attr('cx');
+            node.y = circle.attr('cy');
+            node.px = pcircle.attr('cx');
+            node.py = pcircle.attr('cy');
+        });
+
+        console.log(children);
+
+        var link = d3.select('#links').selectAll('line')
+            .data(children, function(d){
+                return d.id + d.parent;
+            });
+        
+        link.enter()
+            .append('line')
+            .attr('x1', function(d) { return d.px})
+            .attr('y1', function(d) { return d.py})
+            .attr('x2', function(d) { return d.x})
+            .attr('y2', function(d) { return d.y})
+            .attr('stroke', function(d){
+                if(d.cited_by === true) return 'steelblue';
+                else return 'orange';
+            });
+
+        link.exit()
+            .remove();
+    };
     return {
         init: function(data, tagList) {
             var margin = {top: 20, right: 20, bottom: 20, left: 20};
@@ -82,6 +142,7 @@ var PlotView = (function() {
                 .enter()
                 .append("circle")
                 .attr("class", "paper")
+                .attr('id', function(d) { return 'p' + d.id; })
                 .attr("cx", function(d) { return x(d.vec2[0]); })
                 .attr("cy", function(d) { return y(d.vec2[1]); })
                 .attr("r", function(d) { return r(d.citation_count); })
@@ -101,14 +162,18 @@ var PlotView = (function() {
                   controller.updateCurrentPaper(d);
                 });
 
-            lasso.items(d3.selectAll(".paper"))
+            lasso.items(d3.selectAll(".paper"));
+            d3.selectAll('svg').append('g').attr('id', 'links');
             paperGroup.call(lasso);
-    },
-    refresh: function() {
-        var papers = d3.selectAll(".paper").transition()
-            .duration(200)
-            .ease("quad")
-            .attr("opacity", filterApplier);
-    }
-  };
+        },
+        refresh: function() {
+            var papers = d3.selectAll(".paper").transition()
+                .duration(200)
+                .ease("quad")
+                .attr("opacity", filterApplier);
+        },
+        drawGraph: function(node, json) {
+            makeGraph(node, json);
+        }
+    };
 })();

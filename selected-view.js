@@ -54,6 +54,7 @@ var SelectedView = (function() {
                 d.object.setAttribute('fill', 'black');
             }).on('click', function(d){
                 controller.updateCurrentPaper(d.data);
+                controller.drawTree(d.object);
             });
         }
     };

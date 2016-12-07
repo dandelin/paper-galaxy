@@ -2,7 +2,6 @@
 var DetailView = (function() {
     var view = d3.select("#detail-view");
     var attributes = ["title", "authors", "author_tags", "citation_count", "abstract"];
-    var currentPaper = {};
 
     var selectors = [];
 
@@ -20,27 +19,22 @@ var DetailView = (function() {
         
     return {
         update: function(newPaper) {
-            // update currentPaper object
-            attributes.forEach(function(attribute) {
-                currentPaper[attribute] = newPaper[attribute];
-            });
-
             // update view contents
-            selectors.title.html(currentPaper.title);
+            selectors.title.html(newPaper.title);
             selectors.authors.html("").selectAll("span")
-                .data(currentPaper.authors)
+                .data(newPaper.authors)
                 .enter()
                 .append("span")
                 .attr("class", "author label label-info")
                 .html(function(d) { return d.name; });
             selectors.author_tags.html("").selectAll("span")
-                .data(currentPaper.author_tags)
+                .data(newPaper.author_tags)
                 .enter()
                 .append("span")
                 .attr("class", "author-tag label label-info")
                 .html(function(d) { return d; });
-            selectors.citation_count.html(currentPaper.citation_count);
-            selectors.abstract.html(currentPaper.abstract);
+            selectors.citation_count.html(newPaper.citation_count);
+            selectors.abstract.html(newPaper.abstract);
         },
     };
 })();
