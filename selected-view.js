@@ -24,9 +24,17 @@ var SelectedView = (function() {
             });
             
             var rows = tbody.selectAll('tr')
-                .data(data)
+                .data(data, function(d){
+                    return d.data.id;
+                });
+
+            rows
                 .enter()
                 .append('tr');
+
+            rows
+                .exit()
+                .remove();
                 
             var cells = rows.selectAll('td')
                 .data(function(row){
