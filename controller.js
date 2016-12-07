@@ -3,6 +3,9 @@ function Controller() {
     this.tagList;
     this.authorList;
     this.filters;
+    this.visiblePaperList;
+    this.visibleTagList;
+    this.visibleAuthorList;
     this.currentPaper;
 }
 
@@ -19,10 +22,15 @@ Controller.prototype = {
         this.tagList = tagList;
         this.authorList = authorList;
         this.paperObj = paperObj;
+
+        this.visiblePaperList = paperList;
+        this.visibleTagList = tagList;
+        this.visibleAuthorList = authorList;
     },
 
     notifyFilterChange: function() {
         this.filters = filterView.getFilters();
+        this.updateVisibleItemList(this.filters);
         PlotView.refresh();
         if(this.currentPaper !== undefined) PlotView.drawGraph();
     },
@@ -30,7 +38,7 @@ Controller.prototype = {
     isFiltered: function(paper) { // true: filter out, false: show
         if (!this.filters) {this.filters = filterView.getFilters();}
 
-        var containsKeyword = this.checkKeyword(this.filters.keywordFilter);
+        var containsKeyword = this.checkKeyword(paper);
 
         return !containsKeyword ||
             paper.year < this.filters.yearFilter.min || 
@@ -41,41 +49,58 @@ Controller.prototype = {
             paper.reference_count > this.filters.refFilter.max;
     },
 
-    checkKeyword: function(keywordFilter) {
-        var contains = false;
-
-        filterView.searchCategories.forEach(function(category) {
-            var 
-        })
+    checkKeyword: function(paper) {
+        var contains;
 
         // check title
-        this.paperList.forEach(function(paper) {
-            var title = paper.title.toLowerCase();
-            // var filter = keywordFilter.
-
-            if (paper.title.toLowerCase().includes(lowerCaseKeyword)) {
-                results["title"].push(paper.title);
+        var title = paper.title.toLowerCase();
+        var filter = this.filters.keywordFilter.title;
+        contains = true;
+        filter.every(function(word) {
+            if (!title.includes(word.toLowerCase())) {
+                contains = false;
+                return false;
+            } else {
+                return true;
             }
         });
+        if (!contains) { return false; }
 
         // check authors
-        results["author"] = [];
-        this.authorList.forEach(function(author) {
-            if (author.name.toLowerCase().includes(lowerCaseKeyword)) {
-                results["author"].push(author.name);
-            }
+        var authors = paper.authors;
+        var filter = this.filters.keywordFilter.author;
+        filter.forEach(function(word) {
+            contains = false;
+            authors.every(function(author) {
+                if (author.name.toLowerCase().includes(word.toLowerCase())) {
+                    contains = true;
+                    return false;
+                } else {
+                    return true;
+                }
+            });
+            if (!contains) { return false; }
         });
+        if (!contains) { return false; }
 
         // check keywords
-        results["keyword"] = [];
-        this.tagList.forEach(function(tag) {
-            if(tag.tag.toLowerCase().includes(lowerCaseKeyword)) {
-                results["keyword"].push(tag.tag);
-            }
+        var tags = paper.author_tags;
+        var filter = this.filters.keywordFilter.keyword;
+        filter.forEach(function(word) {
+            contains = false;
+            tags.every(function(tag) {
+                if (tag.toLowerCase().includes(word.toLowerCase())) {
+                    contains = true;
+                    return false;
+                } else {
+                    return true;
+                }
+            });
+            if (!contains) { return false; }
         });
+        if (!contains) { return false; }
 
-        return false;
-        
+        return true;
     },
 
     onKeywordClick: function(text) {
@@ -99,13 +124,43 @@ Controller.prototype = {
         filterView.updatePopup(array);
     },
 
+    updateVisibleItemList: function(filters) {
+        var papers = [];
+        var tags = [];
+        var authors = [];
+        this.paperList.forEach(function(p) {
+            if (!controller.isFiltered(p)) {
+                // add papers
+                papers.push(p);
+
+                // add tags
+                p.author_tags.forEach(function(t) {
+                    tags.pushIfNotExist(t, function(e) {
+                        return e === t;
+                    });
+                });
+
+                // add authors
+                p.authors.forEach(function(a) {
+                    authors.pushIfNotExist(a, function(e) {
+                        return a.id === e.id;
+                    });
+                });
+            }
+        });
+
+        this.visiblePaperList = papers;
+        this.visibleTagList = tags;
+        this.visibleAuthorList = authors;
+    },
+
     searchKeyword: function(keyword) {
         var results = {};
         var lowerCaseKeyword = keyword.toLowerCase();
         
         // search title
         results["title"] = [];
-        this.paperList.forEach(function(paper) {
+        this.visiblePaperList.forEach(function(paper) {
             if (paper.title.toLowerCase().includes(lowerCaseKeyword)) {
                 results["title"].push(paper.title);
             }
@@ -113,7 +168,7 @@ Controller.prototype = {
 
         // search authors
         results["author"] = [];
-        this.authorList.forEach(function(author) {
+        this.visibleAuthorList.forEach(function(author) {
             if (author.name.toLowerCase().includes(lowerCaseKeyword)) {
                 results["author"].push(author.name);
             }
@@ -121,9 +176,13 @@ Controller.prototype = {
 
         // search keywords
         results["keyword"] = [];
-        this.tagList.forEach(function(tag) {
-            if(tag.tag.toLowerCase().includes(lowerCaseKeyword)) {
-                results["keyword"].push(tag.tag);
+        this.visibleTagList.forEach(function(tag) {
+            var t = tag;
+            if (tag.tag) {
+                t = tag.tag;
+            }
+            if(t.toLowerCase().includes(lowerCaseKeyword)) {
+                results["keyword"].push(t);
             }
         });
 

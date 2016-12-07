@@ -181,9 +181,10 @@ var PlotView = (function() {
             paperGroup.call(lasso);
         },
         refresh: function() {
-            var papers = d3.selectAll(".paper").transition()
-                .duration(200)
-                .ease("quad")
+            var papers = d3.selectAll(".paper")
+                // .transition()
+                // .duration(200)
+                // .ease("quad")
                 .attr("opacity", filterApplier);
         },
         drawGraph: function() {
