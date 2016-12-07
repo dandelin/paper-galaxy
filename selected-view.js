@@ -1,17 +1,16 @@
 "use strict";
 var SelectedView = (function() {
     var view = d3.select('#selected-view');
-    view.style('overflow', 'scroll');
     var table = view.append('table');
-    var head_row = table.append('thead').append('tr');
+    var head_row = table.append('thead').append('tr').attr("class", "selected-header");
     var tbody = table.append('tbody');
     
-    head_row.append('th').text('Title');
-    head_row.append('th').text('Citation Count');
+    head_row.append('th').text('Title').attr("class", "selected-title");
+    head_row.append('th').text('Citation Count').attr("class", "selected-citation-count");
     
     return {
         updateSelectedPapers: function(selected) {
-            var columns = ['title', 'citation_count']
+            var columns = ['title', 'citation-count']
             var data = selected[0].map(function(d){
                 return {
                     data: d.__data__,
@@ -44,6 +43,7 @@ var SelectedView = (function() {
                 })
                 .enter()
                 .append('td')
+                .attr('class', function(d) { return "selected-"+d.column; })
                 .text(function(d){
                     return d.value;
                 });

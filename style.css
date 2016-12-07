@@ -1,65 +1,83 @@
 html, body {
-  height: 100%;
-  overflow: hidden;
-  font-family: Arial, Helvetica, sans-serif;
+    height: 100%;
+    overflow: hidden;
+    font-family: Arial, Helvetica, sans-serif;
 }
 
 .view {
-  border: 1px #ddd solid;
-  display: relative;
+    border: 1px #ddd solid;
+    display: relative;
 }
 
 #filter-view {
-  height: 40%;
-  min-height: 350px;
-  overflow-y: auto;
-  overflow-x: hidden;
+    height: 50%;
+    min-height: 350px;
 }
 
 #mapping-view {
-
+    height: 50%;
 }
 
 #selected-view {
-  height: 60%;
+    height: 50%;
+    overflow-x: hidden;
+    overflow-y: auto;
+    padding: 5px;
+}
+
+#selected-view thead tr {
+    font-size: 13px;
+}
+
+#selected-view tbody tr {
+    font-size: 12px;
+    margin-bottom: 3px;
+}
+
+#selected-view .title {
+    width: 75%;
+}
+
+#selected-view .citation-count {
+    width: 25%;
 }
 
 #plot-view {
-  height: 100%;
+    height: 100%;
 }
 
 #detail-view {
-  height: 40%;
-  overflow-x: hidden;
-  overflow-y: auto;
-  padding: 5px;
+    height: 50%;
+    overflow-x: hidden;
+    overflow-y: auto;
+    padding: 5px;
 }
 
 #detail-view .group {
-  margin-bottom: 3px;
+    margin-bottom: 3px;
 }
 
 #detail-view .head {
-  font-weight: bold;
-  font-size: 12px;
+    font-weight: bold;
+    font-size: 12px;
 }
 
 #detail-view .content {
-  font-size: 11px;
+    font-size: 11px;
 }
 
 #detail-view .content .label {
-  margin: 1px;
-  display: inline-block;
+    margin: 1px;
+    display: inline-block;
 }
 
 #citation-view {
-  height: 60%;
+    height: 60%;
 }
 
 .padding-0 {
-  padding: 0 !important;
-  margin: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
 }
 
 
@@ -67,36 +85,36 @@ html, body {
 /* 라소 관련 스타일 */
 
 .lasso path {
-  stroke: rgb(80,80,80);
-  stroke-width:2px;
+    stroke: rgb(80,80,80);
+    stroke-width:2px;
 }
 
 .lasso .drawn {
-  fill-opacity:.05 ;
+    fill-opacity:.05 ;
 }
 
 .lasso .loop_close {
-  fill:none;
-  stroke-dasharray: 4,4;
+    fill:none;
+    stroke-dasharray: 4,4;
 }
 
 .lasso .origin {
-  fill:#3399FF;
-  fill-opacity:.5;
+    fill:#3399FF;
+    fill-opacity:.5;
 }
 
 /* Filter styles */
 .sliderFilter {
-  margin-left: 20px;
-  margin-right: 20px;
-  margin-bottom: 20px;
+    margin-left: 20px;
+    margin-right: 20px;
+    margin-bottom: 20px;
 }
 
 .searchFilter {
-  min-height: 100px;
-  margin-left: 15px;
-  margin-right: 15px;
-  margin-bottom: 20px;
+    min-height: 100px;
+    margin-left: 15px;
+    margin-right: 15px;
+    margin-bottom: 20px;
 }
 
 input, button {
@@ -105,73 +123,73 @@ input, button {
 }
 
 .keywordBox {
-  position: relative;
-  margin-top: 10px;
+    position: relative;
+    margin-top: 10px;
 }
 
 .keywordBox .keywordGroup {
-  position: relative;
-  margin-top: 5px;
-  margin-bottom: 5px;
+    position: relative;
+    margin-top: 5px;
+    margin-bottom: 5px;
 }
 
 .keywordBox .keywordGroup .keyword {
-  font-size: 11px;
-  margin: 1px;
-  display: inline-block;
+    font-size: 11px;
+    margin: 1px;
+    display: inline-block;
 }
 
 .searchFilter > input {
-  width: 100%;
+    width: 100%;
 	padding: .1em .3em;
 	border: 0;
 	border: 1px solid hsl(35, 80%, 60%);
 	background: hsla(0,0%,100%,.2);
 	border-radius: .3em;
 	box-shadow: .05em .1em .3em rgba(0,0,0,.3) inset;
-  display: block;
+    display: block;
 }
 
 .popupBox {
-  position: absolute;
-  min-width: 80%;
+    position: absolute;
+    min-width: 80%;
 
 }
 
 .search_result {
-  float: left;
-  min-width: 100%
+    float: left;
+    min-width: 100%
 }
 
 .search_details {
-  top: 20px;
-  left: 250px;
-  max-width: 40%;
-  max-height: 70%;
-  overflow-y: auto;
-  position: absolute;
-  z-index: 5;
-  box-shadow: .05em .2em .6em rgba(0,0,0,.2);
+    top: 20px;
+    left: 250px;
+    max-width: 40%;
+    max-height: 70%;
+    overflow-y: auto;
+    position: absolute;
+    z-index: 5;
+    box-shadow: .05em .2em .6em rgba(0,0,0,.2);
 }
 
 .search_result .popupElm .badge {
-  margin-left: 10px;
+    margin-left: 10px;
 }
 
 .search_result > ul {
-  position: relative;
-  left: 0;
-  z-index: 4;
-  min-width: 100%;
-  box-sizing: border-box;
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  background: #fff;
+    position: relative;
+    left: 0;
+    z-index: 4;
+    min-width: 100%;
+    box-sizing: border-box;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    background: #fff;
 }
 
 .search_result > ul:empty {
-    display: none;
+        display: none;
 }
 
 .search_result > ul {
@@ -185,45 +203,45 @@ input, button {
 }
 
 .search_result > ul:before {
-  content: "";
-  position: absolute;
-  top: -.43em;
-  left: 1em;
-  width: 0; height: 0;
-  padding: .4em;
-  background: white;
-  border: inherit;
-  border-right: 0;
-  border-bottom: 0;
-  -webkit-transform: rotate(45deg);
-  transform: rotate(45deg);
+    content: "";
+    position: absolute;
+    top: -.43em;
+    left: 1em;
+    width: 0; height: 0;
+    padding: .4em;
+    background: white;
+    border: inherit;
+    border-right: 0;
+    border-bottom: 0;
+    -webkit-transform: rotate(45deg);
+    transform: rotate(45deg);
 }
 
 .search_result > ul > li {
-  position: relative;
-  padding: .2em .5em;
-  cursor: pointer;
+    position: relative;
+    padding: .2em .5em;
+    cursor: pointer;
 }
 
 .search_result > ul > li:hover {
-  background: hsl(200, 40%, 80%);
-  color: black;
+    background: hsl(200, 40%, 80%);
+    color: black;
 }
 
 .search_result > ul > li[aria-selected="true"] {
-  background: hsl(205, 40%, 40%);
-  color: white;
+    background: hsl(205, 40%, 40%);
+    color: white;
 }
 
-  .search_result mark {
-    background: hsl(65, 100%, 50%);
-  }
-  
-  .search_result li:hover mark {
-    background: hsl(68, 100%, 41%);
-  }
-  
-  .search_result li[aria-selected="true"] mark {
-    background: hsl(86, 100%, 21%);
-    color: inherit;
-  }
+    .search_result mark {
+        background: hsl(65, 100%, 50%);
+    }
+    
+    .search_result li:hover mark {
+        background: hsl(68, 100%, 41%);
+    }
+    
+    .search_result li[aria-selected="true"] mark {
+        background: hsl(86, 100%, 21%);
+        color: inherit;
+    }
