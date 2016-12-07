@@ -1,7 +1,6 @@
 "use strict";
 var SelectedView = (function() {
     var view = d3.select('#selected-view');
-    view.style('overflow', 'scroll');
     var table = view.append('table');
     var head_row = table.append('thead').append('tr');
     var tbody = table.append('tbody');
@@ -22,6 +21,7 @@ var SelectedView = (function() {
             data.sort(function(a, b){
                 return parseInt(b.data.citation_count) - parseInt(a.data.citation_count);
             });
+            console.log(data);
             
             var rows = tbody.selectAll('tr')
                 .data(data, function(d){
