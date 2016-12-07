@@ -12,6 +12,8 @@ html, body {
 #filter-view {
   height: 40%;
   min-height: 350px;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 #mapping-view {
@@ -85,8 +87,8 @@ html, body {
 
 /* Filter styles */
 .sliderFilter {
-  margin-left: 15px;
-  margin-right: 15px;
+  margin-left: 20px;
+  margin-right: 20px;
   margin-bottom: 20px;
 }
 
@@ -100,6 +102,23 @@ html, body {
 input, button {
 	font: inherit;
 	text-shadow: inherit;
+}
+
+.keywordBox {
+  position: relative;
+  margin-top: 10px;
+}
+
+.keywordBox .keywordGroup {
+  position: relative;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+.keywordBox .keywordGroup .keyword {
+  font-size: 11px;
+  margin: 1px;
+  display: inline-block;
 }
 
 .searchFilter > input {
@@ -129,7 +148,7 @@ input, button {
   left: 250px;
   max-width: 40%;
   max-height: 70%;
-  overflow-y: scroll;
+  overflow-y: auto;
   position: absolute;
   z-index: 5;
   box-shadow: .05em .2em .6em rgba(0,0,0,.2);

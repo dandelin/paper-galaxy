@@ -5,6 +5,7 @@ function FilterView() {
   this.refFilter = {};
   this.searchBox;
   this.searchPopup;
+  this.keywordBox;
   this.searchCategories = ["title", "author", "keyword"];
 }
 
@@ -12,10 +13,12 @@ FilterView.prototype = {
   init: function (rangeList) {
     this.searchBox = d3.select("#searchBox").on("input", function() {
       if (this.value.length > 0) {
-        filterView.searchPopup.style("display", "block");
+        // filterView.searchPopup.style("display", "block");
+        filterView.setSearchPopupDisplay("block");
         controller.onKeywordInput(this.value);  
       } else {
-        filterView.searchPopup.style("display", "none");
+        filterView.setSearchPopupDisplay("none");
+        // filterView.searchPopup.style("display", "none");
       }
       
     });
@@ -26,11 +29,18 @@ FilterView.prototype = {
       .attr("class", "search_result")
       .style("display", "none");
     // this.searchPopup.append('ul')
-      
     
     this.searchCategories.forEach(function(category) {
       // init keywordFilter
       filterView.keywordFilter[category] = [];
+    });
+    
+    this.keywordBox = d3.select(".searchFilter").append('div')
+      .attr("class", "keywordBox");
+
+    this.searchCategories.forEach(function(category) {
+      filterView.keywordBox.append('div')
+        .attr("class", "keywordGroup group_"+category);
     });
 
     filterView.addSlider("Year", rangeList[0], this.yearFilter);
@@ -45,6 +55,8 @@ FilterView.prototype = {
     .enter().append("li")
       .attr("class", "popupElm")
       .on("click", function() {
+        filterView.setSearchPopupDisplay("none");
+        filterView.clearSearchBox();
         controller.onKeywordClick(d3.select(this).select("span").text());
       })
       .on("mouseover", function(d, i) {
@@ -84,6 +96,40 @@ FilterView.prototype = {
       .text(function(d) { return d.list.length; });
   },
 
+  updateKeywordBox: function() {
+    Object.keys(this.keywordFilter).forEach(function(key) {
+      var group = filterView.keywordBox.select(".group_" + key);
+      var element = group.selectAll("span")
+        .data(filterView.keywordFilter[key]);
+      element.enter().append("span")
+        .attr("class", "keyword label " + filterView.getLabelType(key))
+        .text(function(d) {return d;})
+        .on("click", function() {
+          filterView.removeKeywordFromFilter(key, d3.select(this).text());
+          this.remove();
+        });
+      element.exit().remove();
+      if (filterView.keywordFilter[key].length > 0) {
+        group.style("display", "block");
+      } else {
+        group.style("display", "none");
+      }
+    });
+  },
+
+  getLabelType: function(category) {
+    var colors = ["label-primary", "label-success", "label-warning"];
+    return colors[this.searchCategories.indexOf(category)];
+  },
+
+  setSearchPopupDisplay: function(d) {
+    this.searchPopup.style("display", d);
+  },
+
+  clearSearchBox: function() {
+    document.getElementById("searchBox").value = "";
+  },
+
   addSlider: function(text, range, filter) {
     filter.min = range.min;
     filter.max = range.max;
@@ -102,7 +148,9 @@ FilterView.prototype = {
   },
 
   addKeywordToFilter: function(category, keyword) {
-    this.keywordFilter[category].pushIfNotExist(keyword);
+    this.keywordFilter[category].pushIfNotExist(keyword, function(elm) {
+      return elm === keyword;
+    });
   },
 
   removeKeywordFromFilter: function(category, keyword) {
