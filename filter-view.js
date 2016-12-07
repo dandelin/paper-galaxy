@@ -151,10 +151,12 @@ FilterView.prototype = {
     this.keywordFilter[category].pushIfNotExist(keyword, function(elm) {
       return elm === keyword;
     });
+    controller.notifyFilterChange();
   },
 
   removeKeywordFromFilter: function(category, keyword) {
     this.keywordFilter[category].removeIfExist(keyword);
+    controller.notifyFilterChange();
   },
   
   getFilters: function() {
