@@ -8,9 +8,9 @@ function Controller() {
 
 Controller.prototype = {
     updateCurrentPaper: function(newPaper) {
-      this.currentPaper = newPaper;
-      DetailView.update(newPaper);
-      CitationView.update(newPaper);
+        this.currentPaper = newPaper;
+        DetailView.update(newPaper);
+        CitationView.update(newPaper);
     },
 
     init: function(paperList, tagList, authorList) {
