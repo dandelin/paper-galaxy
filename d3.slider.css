@@ -33,7 +33,7 @@
 
 .d3-slider-handle {
     position: absolute;
-    width: 1.2em;
+    width: 0.4em;
     height: 1.2em;
     border: 1px solid #d3d3d3;
     border-radius: 4px;
@@ -47,8 +47,8 @@
 }
 
 .d3-slider-horizontal .d3-slider-handle {
-    top: -.3em;
-    margin-left: -.6em;
+    top: -.2em;
+    margin-left: -.2em;
 }
 
 .d3-slider-axis {

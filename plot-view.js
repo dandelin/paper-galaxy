@@ -4,23 +4,21 @@ function filterApplier(d) {
 }
 
 function highlightApplier(d) {
-    return controller.isFiltered(d) ? null : "yellow";
+    return controller.isFiltered(d) ? null : "#ff7f0e";
 }
 
 var PlotView = (function() {
     var makeLasso = function(scope) {
         var lasso_start = function() {
             lasso.items()
-                .style('opacity', 0.15)
+                //.style('opacity', 0.15)
                 .style('stroke', null);
         };
         
         var lasso_draw = function() {
             lasso.items().filter(function(d) {return d.possible===true})
-                .style('opacity', filterApplier);
-            
-            lasso.items().filter(function(d) {return d.possible===false})
-                .style('opacity', 0.15);
+                .style('stroke-width', 1)
+                .style('stroke', highlightApplier);
         };
         
         var lasso_end = function() {

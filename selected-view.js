@@ -21,7 +21,6 @@ var SelectedView = (function() {
             data.sort(function(a, b){
                 return parseInt(b.data.citation_count) - parseInt(a.data.citation_count);
             });
-            console.log(data);
             
             var rows = tbody.selectAll('tr')
                 .data(data, function(d){
@@ -50,8 +49,10 @@ var SelectedView = (function() {
                 
             rows.on('mouseover', function(d){
                 d.object.setAttribute('fill', 'red');
+                d3.select(this).style('background-color', '#dddddd');
             }).on('mouseout', function(d){
                 d.object.setAttribute('fill', 'black');
+                d3.select(this).style('background-color', null);
             }).on('click', function(d){
                 controller.updateCurrentPaper(d.data);
                 controller.drawTree(d.object);

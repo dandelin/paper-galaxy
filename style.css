@@ -25,13 +25,16 @@ html, body {
     padding: 5px;
 }
 
-#selected-view thead tr {
+#selected-view th {
     font-size: 13px;
+    padding: 2px;
+    margin-bottom: 4px;
 }
 
-#selected-view tbody tr {
+#selected-view td {
     font-size: 12px;
-    margin-bottom: 3px;
+    padding: 2px;
+    margin-bottom: 2px;
 }
 
 #plot-view {
