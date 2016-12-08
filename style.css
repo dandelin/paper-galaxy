@@ -14,33 +14,6 @@ html, body {
     min-height: 350px;
 }
 
-#mapping-view {
-    height: 50%;
-}
-
-#selected-view {
-    height: 50%;
-    overflow-x: hidden;
-    overflow-y: auto;
-    padding: 5px;
-}
-
-#selected-view th {
-    font-size: 13px;
-    padding: 2px;
-    margin-bottom: 4px;
-}
-
-#selected-view td {
-    font-size: 12px;
-    padding: 2px;
-    margin-bottom: 2px;
-}
-
-#plot-view {
-    height: 100%;
-}
-
 #detail-view {
     height: 50%;
     overflow-x: hidden;
@@ -66,15 +39,39 @@ html, body {
     display: inline-block;
 }
 
-#citation-view {
-    height: 60%;
+#plot-view {
+    height: 100%;
 }
+
+#selected-view {
+    height: 50%;
+    overflow-x: hidden;
+    overflow-y: auto;
+    padding: 5px;
+}
+
+#selected-view th {
+    font-size: 13px;
+    padding: 2px;
+    margin-bottom: 4px;
+}
+
+#selected-view td {
+    font-size: 12px;
+    padding: 2px;
+    margin-bottom: 2px;
+}
+
+#stat-view {
+    height: 50%;
+    padding: 5px;
+}
+
 
 .padding-0 {
     padding: 0 !important;
     margin: 0 !important;
 }
-
 
 
 /* 라소 관련 스타일 */

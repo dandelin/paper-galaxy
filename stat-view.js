@@ -1,0 +1,5 @@
+var StatView = (function() {
+
+    return {
+    };
+})();
