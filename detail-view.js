@@ -1,7 +1,7 @@
 "use strict";
 var DetailView = (function() {
     var view = d3.select("#detail-view");
-    var attributes = ["title", "authors", "author_tags", "citation_count", "abstract"];
+    var attributes = ["title", "publication_date", "authors", "author_tags", "citation_count", "abstract"];
 
     var selectors = [];
 
@@ -21,6 +21,7 @@ var DetailView = (function() {
         update: function(newPaper) {
             // update view contents
             selectors.title.html(newPaper.title);
+            selectors.publication_date.html(newPaper.publication_date);
             selectors.authors.html("").selectAll("span")
                 .data(newPaper.authors)
                 .enter()
