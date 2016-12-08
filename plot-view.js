@@ -19,6 +19,9 @@ var PlotView = (function() {
             lasso.items().filter(function(d) {return d.possible===true})
                 .style('stroke-width', 1)
                 .style('stroke', highlightApplier);
+            lasso.items().filter(function(d) {return d.possible===false})
+                .style('stroke-width', 1)
+                .style('stroke', null);
         };
         
         var lasso_end = function() {
@@ -41,7 +44,7 @@ var PlotView = (function() {
         
         // 라소의 정의
         var lasso = scope.d3.lasso()
-            .closePathDistance(1000)
+            .closePathDistance(10000)
             .area(lasso_area) // 영역의 정의
             .on('start', lasso_start)
             .on('draw', lasso_draw)
