@@ -111,6 +111,11 @@ html, body {
     margin-bottom: 10px;
 }
 
+.sliderFilter .slider_hist > svg {
+    width: 100%;
+    height: 20px;
+}
+
 .searchFilter {
     min-height: 80px;
     margin-left: 15px;
