@@ -29,7 +29,7 @@ var StatView = (function() {
                 tagList.push(tagObj[key]);
             });
             tagList.sort(function(a, b) { return b.papers.length - a.papers.length; });
-            tagList = tagList.slice(5, 35);
+            tagList = tagList.slice(3, 33);
 
             // create wordle layout
             var fill = d3.scale.category10();
@@ -51,7 +51,7 @@ var StatView = (function() {
 
                     text
                         .transition("wordle-update")
-                        .duration(200)
+                        .duration(300)
                         .style("font-size", function(d) { return d.size+"px"; })
                         .attr("fill", function(d, i) { return fill(i); })
                         .attr("transform", function(d) { return "translate("+[d.x, d.y]+")"; });
@@ -61,7 +61,7 @@ var StatView = (function() {
                         .attr("fill", function(d, i) { return fill(i); })
                         .attr("transform", function(d) { return "translate("+[d.x, d.y]+")"; })
                         .transition("wordle-enter")
-                        .duration(200)
+                        .duration(300)
                         .style("font-size", function(d) { return d.size+"px"; })
                         .style("font-weight", "bold")
                         .style("font-family", "Sans-serif")
@@ -71,7 +71,7 @@ var StatView = (function() {
 
                     text.exit()
                         .transition("wordle-exit")
-                        .duration(200)
+                        .duration(300)
                         .style("font-size", "0px")
                         .style("fill-opacity", 1e-6)
                         .remove();
