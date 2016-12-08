@@ -2,6 +2,12 @@
   <head>
     <title>PaperSense</title>
     <meta charset="UTF-8">
+    <!-- jquery -->
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+    <!-- bootstrap -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
   </head>
   <body> <div id="left" class="column col-md-2 padding-0">
       <div class="view" id="filter-view">
@@ -10,8 +16,7 @@
           <input id="searchBox"/>
         </div>
       </div>
-      <div class="view" id="mapping-view">
-        Mapping
+      <div class="view" id="detail-view">
       </div>
     </div>
     <div id="center" class="column col-md-7 padding-0">
@@ -21,19 +26,20 @@
     <div id="right" class="column col-md-3 padding-0">
       <div class="view" id="selected-view">
       </div>
-      <div class="view" id="detail-view">
+      <div class="view" id="stat-view">
+          <ul id="stat-view-tabs" class="nav nav-tabs">
+              <li><a>Author Co-occurence</a></li>
+              <li><a>Author Tags Wordle</a></li>
+              <li><a>Most Referred Paper</a></li>
+              <li><a>Publications By Year</a></li>
+          </ul>
+          <div id="stat-view-body">
+          </div>
       </div>
     </div>
 
-    <!-- jquery -->
-    <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
-    <!-- bootstrap -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
     <!-- d3.js -->
     <script src="https://d3js.org/d3.v3.min.js"></script>
-
     <!-- lasso selection -->
     <script src = "http://axc.net/code_libraries/lasso/lasso.min.js"></script>
 
@@ -46,6 +52,9 @@
     <link rel="stylesheet" href="./d3.slider.css">
     <script src="./d3.slider.js"></script>
 
+    <!-- d3.wordle -->
+    <script src="./d3.layout.cloud.js"></script>
+
     <link rel="stylesheet" href="./style.css">
     <script src="./util.js"></script>
     <script src="./controller.js"></script>
@@ -53,9 +62,8 @@
     <script src="./plot-view.js"></script>
     <script src="./filter-view.js"></script>
     <script src="./detail-view.js"></script>
-    <script src="./mapping-view.js"></script>
     <script src="./selected-view.js"></script>
-    <script src="./citation-view.js"></script>
+    <script src="./stat-view.js"></script>
     <script src="./main.js"></script>
   </body>
 </html>
