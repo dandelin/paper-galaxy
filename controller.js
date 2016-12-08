@@ -2,6 +2,7 @@ function Controller() {
     this.paperList;
     this.tagList;
     this.authorList;
+    this.authorHash;
     this.filters;
     this.visiblePaperList;
     this.visibleTagList;
@@ -17,10 +18,11 @@ Controller.prototype = {
         PlotView.drawGraph();
     },
 
-    init: function(paperList, tagList, authorList, paperObj) {
+    init: function(paperList, tagList, authorList, authorHash, paperObj) {
         this.paperList = paperList;
         this.tagList = tagList;
         this.authorList = authorList;
+        this.authorHash = authorHash;
         this.paperObj = paperObj;
 
         this.visiblePaperList = paperList;
@@ -35,7 +37,11 @@ Controller.prototype = {
         if(this.currentPaper !== undefined) PlotView.drawGraph();
     },
 
-    isFiltered: function(paper) { // true: filter out, false: show
+    isFiltered: function(paper) {
+        return !this.visiblePaperList.includes(paper);
+    },
+
+    isFiltered_internal: function(paper) { // true: filter out, false: show
         if (!this.filters) {this.filters = filterView.getFilters();}
 
         var containsKeyword = this.checkKeyword(paper);
@@ -50,56 +56,65 @@ Controller.prototype = {
     },
 
     checkKeyword: function(paper) {
-        var contains;
-
         // check title
-        var title = paper.title.toLowerCase();
-        var filter = this.filters.keywordFilter.title;
-        contains = true;
-        filter.every(function(word) {
-            if (!title.includes(word.toLowerCase())) {
-                contains = false;
-                return false;
-            } else {
-                return true;
-            }
-        });
-        if (!contains) { return false; }
+        if (!this.checkTitles(paper, this.filters.keywordFilter.title)) { return false; }
 
         // check authors
-        var authors = paper.authors;
-        var filter = this.filters.keywordFilter.author;
-        filter.forEach(function(word) {
-            contains = false;
-            authors.every(function(author) {
-                if (author.name.toLowerCase().includes(word.toLowerCase())) {
-                    contains = true;
-                    return false;
-                } else {
-                    return true;
-                }
-            });
-            if (!contains) { return false; }
-        });
-        if (!contains) { return false; }
+        if (!this.checkAuthors(paper, this.filters.keywordFilter.author)) { return false; }
 
         // check keywords
+        if (!this.checkTags(paper, this.filters.keywordFilter.keyword)) { return false; }
+
+        return true;
+    },
+
+    checkTitles: function(paper, list) {
+        var title = paper.title.toLowerCase();
+        //var filter = this.filters.keywordFilter.title;
+        var contains = true;
+        list.every(function(word) {
+            if (!title.includes(word.toLowerCase())) {
+                contains = false;
+                return false; // break
+            } else {
+                return true; // continue
+            }
+        });
+
+        return contains;
+    },
+
+    checkAuthors: function(paper, list) {
+        var authors = paper.authors;
+        for (var i=0; i < list.length; i++) {
+            var word = list[i];
+            var contains = false;
+            for (var j=0; j < authors.length; j++) {
+                var author = authors[j];
+                if (controller.getAuthorNameById(author.id).toLowerCase().includes(word.toLowerCase())) {
+                    contains = true;
+                    break;
+                }
+            }
+            if (!contains) { return false; }
+        }
+        return true;
+    },
+
+    checkTags: function(paper, list) {
         var tags = paper.author_tags;
-        var filter = this.filters.keywordFilter.keyword;
-        filter.forEach(function(word) {
-            contains = false;
-            tags.every(function(tag) {
+        for (var i=0; i < list.length; i++) {
+            var word = list[i];
+            var contains = false;
+            for (var j=0; j < tags.length; j++) {
+                var tag = tags[j];
                 if (tag.toLowerCase().includes(word.toLowerCase())) {
                     contains = true;
-                    return false;
-                } else {
-                    return true;
+                    break;
                 }
-            });
+            }
             if (!contains) { return false; }
-        });
-        if (!contains) { return false; }
-
+        }
         return true;
     },
 
@@ -129,7 +144,7 @@ Controller.prototype = {
         var tags = [];
         var authors = [];
         this.paperList.forEach(function(p) {
-            if (!controller.isFiltered(p)) {
+            if (!controller.isFiltered_internal(p)) {
                 // add papers
                 papers.push(p);
 
@@ -158,31 +173,24 @@ Controller.prototype = {
         var results = {};
         var lowerCaseKeyword = keyword.toLowerCase();
         
-        // search title
         results["title"] = [];
-        this.visiblePaperList.forEach(function(paper) {
-            if (paper.title.toLowerCase().includes(lowerCaseKeyword)) {
-                results["title"].push(paper.title);
-            }
-        });
-
-        // search authors
         results["author"] = [];
-        this.visibleAuthorList.forEach(function(author) {
-            if (author.name.toLowerCase().includes(lowerCaseKeyword)) {
-                results["author"].push(author.name);
-            }
-        });
-
-        // search keywords
         results["keyword"] = [];
-        this.visibleTagList.forEach(function(tag) {
-            var t = tag;
-            if (tag.tag) {
-                t = tag.tag;
+        this.visiblePaperList.forEach(function(paper) {
+            
+            // search title
+            if (paper.title.toLowerCase().includes(lowerCaseKeyword)) {
+                results["title"].push(paper);
             }
-            if(t.toLowerCase().includes(lowerCaseKeyword)) {
-                results["keyword"].push(t);
+
+            // search authors
+            if (controller.checkAuthors(paper, [keyword])) {
+                results["author"].push(paper);
+            }
+
+            // search tags
+            if (controller.checkTags(paper, [keyword])) {
+                results["keyword"].push(paper);
             }
         });
 
@@ -191,6 +199,10 @@ Controller.prototype = {
 
     drawTree: function(node){
         PlotView.drawGraph(node, this.paperObj);
+    },
+
+    getAuthorNameById: function(id) {
+        return this.authorHash[id];
     }
 
 }

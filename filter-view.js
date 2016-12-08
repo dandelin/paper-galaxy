@@ -65,15 +65,30 @@ FilterView.prototype = {
           .attr("class", "search_details panel panel-default")
           .style("opacity", "0")
           .style("left", (offsetWidth+10) + "px");
-        detailDiv.append("ul")
+        var detailContent = detailDiv.append("ul")
           .attr("class", "list-group")
           .selectAll("li")
           .data(d.list)
           .enter().append("li")
-          .attr("class", "detailElm list-group-item")
-          .text(function(elm) {
-            return elm;
-          });
+          .attr("class", "detailElm list-group-item");
+        detailContent.append("div")
+          .attr("class", "detailContent")
+          .text(function(elm) { return elm.title; });
+        detailContent.append("div")
+          .attr("class", "detailContent")
+          .selectAll("span")
+          .data(function(elm) { return elm.authors} )
+          .enter().append("span")
+          .attr("class", "detailContent_label label " + filterView.getLabelType("author"))
+          .text(function(author) { return controller.getAuthorNameById(author.id); });
+        detailContent.append("div")
+          .attr("class", "detailContent")
+          .selectAll("span")
+          .data(function(elm) { return elm.author_tags} )
+          .enter().append("span")
+          .attr("class", "detailContent_label label " + filterView.getLabelType("keyword"))
+          .text(function(tag) { return tag; });
+        
         detailDiv.transition()
           .duration(500)
           .ease("quad")

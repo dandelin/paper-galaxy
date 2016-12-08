@@ -8,6 +8,7 @@ var Model = (function() {
       var tagList = [];
       var rangeList = [];
       var authorList = [];
+      var authorHash = {};
       d3.json(JSON_FILENAME, function(error, json) {
         // convert json object to paperList
         var paperIds = Object.keys(json);
@@ -33,6 +34,9 @@ var Model = (function() {
 
           // get all unique author list
           d.authors.forEach(function(author) {
+            if (!authorHash[author.id]) {
+              authorHash[author.id] = author.name;
+            }
             authorList.pushIfNotExist(author, function(a) {
               return a.id === author.id;
             });
@@ -51,7 +55,7 @@ var Model = (function() {
           getMinMax(json, "reference_count")];
 
         // execute callback function
-        callback(json, paperList, tagList, rangeList, authorList);
+        callback(json, paperList, tagList, rangeList, authorList, authorHash);
       });
     }
   };

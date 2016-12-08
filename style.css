@@ -164,6 +164,20 @@ input, button {
     box-shadow: .05em .2em .6em rgba(0,0,0,.2);
 }
 
+.search_details .detailContent {
+    position: relative;
+    display: block;
+    max-width: 100%;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.search_details .detailContent .detailContent_label {
+    font-size: 10px;
+    margin: 1px;
+    display: inline-block;
+}
+
 .search_result .popupElm .badge {
     margin-left: 10px;
 }
