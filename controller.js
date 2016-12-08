@@ -8,9 +8,16 @@ function Controller() {
     // this.visibleTagList;
     // this.visibleAuthorList;
     this.currentPaper;
+    this.selectedCircles;
 }
 
 Controller.prototype = {
+    updateSelectedCircles: function(selectedCircles) {
+        this.selectedCircles = selectedCircles;
+        SelectedView.updateSelectedPapers(selectedCircles);
+        StatView.update(selectedCircles[0].map(function(d) { return d.__data__; }));
+    },
+
     updateCurrentPaper: function(newPaper) {
         this.currentPaper = newPaper;
         DetailView.update(newPaper);
