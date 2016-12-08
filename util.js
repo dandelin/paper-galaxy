@@ -11,6 +11,14 @@ function arrayToMinMax(array) {
     return array[0] < array[1] ? {min : array[0], max: array[1]} : {min : array[1], max: array[0]} 
 }
 
+function initOccurrencArray(range) {
+    var list = [];
+    for (var i = range.min; i <= range.max; i++) {
+        list.push({key: i, value: 0});
+    }
+    return list;
+}
+
 // check if an element exists in array using a comparer function
 // comparer : function(currentElement)
 Array.prototype.inArray = function(comparer) { 
@@ -33,4 +41,11 @@ Array.prototype.removeIfExist = function(element) {
     if (index > -1) {
         this.splice(index, 1);
     }
+}
+
+Array.prototype.getItemIndex = function(comparer) {
+    for (var i=0; i < this.length; i++) {
+        if(comparer(this[i])) return i;
+    }
+    return -1;
 }

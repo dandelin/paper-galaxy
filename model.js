@@ -7,8 +7,11 @@ var Model = (function() {
       var tags = {};
       var tagList = [];
       var rangeList = [];
-      var authorList = [];
       var authorHash = {};
+      var yearList = [];
+      var citList = [];
+      var refList = [];
+      var occurrences = {};
       d3.json(JSON_FILENAME, function(error, json) {
         // convert json object to paperList
         var paperIds = Object.keys(json);
@@ -24,6 +27,16 @@ var Model = (function() {
           paperList.push(json[paperId]);
         });
 
+        // init rangeList
+        rangeList = [getMinMax(json, "year"), 
+          getMinMax(json, "citation_count"),
+          getMinMax(json, "reference_count")];
+
+        // init occurrence lists
+        yearList = initOccurrencArray(rangeList[0]);
+        citList = initOccurrencArray(rangeList[1]);
+        refList = initOccurrencArray(rangeList[2]);
+
         // pre-process papers
         paperList.forEach(function(d) {
           // calculate author tags frequencies
@@ -32,14 +45,22 @@ var Model = (function() {
             else { tags[tag] = 1; }
           });
 
-          // get all unique author list
+          // calculate year occurrences
+          var i = yearList.getItemIndex(function(e) { return e.key === d.year; });
+          if (i >= 0) { yearList[i].value += 1; }
+          else { yearList.push({key: d.year, value: 1}); }
+          
+          // calculate citation_count occurrences
+          citList[d.citation_count].value += 1;
+
+          // calculate reference_count occurrences
+          refList[d.reference_count].value += 1;
+          
+          // get all unique author hash
           d.authors.forEach(function(author) {
             if (!authorHash[author.id]) {
               authorHash[author.id] = author.name;
             }
-            authorList.pushIfNotExist(author, function(a) {
-              return a.id === author.id;
-            });
           });
         });
         
@@ -48,14 +69,13 @@ var Model = (function() {
         });
         tagList.sort(function(a,b) { return b.freq - a.freq; });
 
-
-        // init filterView
-        rangeList = [getMinMax(json, "year"), 
-          getMinMax(json, "citation_count"),
-          getMinMax(json, "reference_count")];
+        // generate occurrences
+        occurrences.year = yearList;
+        occurrences.cit = citList;
+        occurrences.ref = refList;
 
         // execute callback function
-        callback(json, paperList, tagList, rangeList, authorList, authorHash);
+        callback(json, paperList, tagList, rangeList, authorHash, occurrences);
       });
     }
   };

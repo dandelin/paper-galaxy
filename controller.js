@@ -1,7 +1,6 @@
 function Controller() {
     this.paperList;
     this.tagList;
-    this.authorList;
     this.authorHash;
     this.filters;
     this.visiblePaperList;
@@ -18,10 +17,9 @@ Controller.prototype = {
         PlotView.drawGraph();
     },
 
-    init: function(paperList, tagList, authorList, authorHash, paperObj) {
+    init: function(paperList, tagList, authorHash, paperObj) {
         this.paperList = paperList;
         this.tagList = tagList;
-        this.authorList = authorList;
         this.authorHash = authorHash;
         this.paperObj = paperObj;
 
