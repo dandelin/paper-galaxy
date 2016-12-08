@@ -41,6 +41,12 @@ html, body {
     height: 100%;
 }
 
+#loading {
+    position: absolute;
+    display: block;
+    z-index: 5;
+}
+
 #detail-view {
     height: 50%;
     overflow-x: hidden;
@@ -102,11 +108,11 @@ html, body {
 .sliderFilter {
     margin-left: 20px;
     margin-right: 20px;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
 }
 
 .searchFilter {
-    min-height: 100px;
+    min-height: 80px;
     margin-left: 15px;
     margin-right: 15px;
     margin-bottom: 20px;

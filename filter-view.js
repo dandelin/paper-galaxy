@@ -13,14 +13,11 @@ FilterView.prototype = {
   init: function (rangeList) {
     this.searchBox = d3.select("#searchBox").on("input", function() {
       if (this.value.length > 0) {
-        // filterView.searchPopup.style("display", "block");
         filterView.setSearchPopupDisplay("block");
         controller.onKeywordInput(this.value);  
       } else {
         filterView.setSearchPopupDisplay("none");
-        // filterView.searchPopup.style("display", "none");
       }
-      
     });
 
     this.searchPopup = d3.select(".searchFilter").append('div')
@@ -28,7 +25,6 @@ FilterView.prototype = {
     .append('div')
       .attr("class", "search_result")
       .style("display", "none");
-    // this.searchPopup.append('ul')
     
     this.searchCategories.forEach(function(category) {
       // init keywordFilter
@@ -43,9 +39,9 @@ FilterView.prototype = {
         .attr("class", "keywordGroup group_"+category);
     });
 
-    filterView.addSlider("Year", rangeList[0], this.yearFilter);
-    filterView.addSlider("Citation Count", rangeList[1], this.citFilter);
-    filterView.addSlider("Reference Count", rangeList[2], this.refFilter);
+    filterView.addSlider2("Year", rangeList[0], this.yearFilter);
+    filterView.addSlider2("Citation Count", rangeList[1], this.citFilter);
+    filterView.addSlider2("Reference Count", rangeList[2], this.refFilter);
   },
 
   updatePopup: function(searchResult) {
@@ -143,6 +139,36 @@ FilterView.prototype = {
 
   clearSearchBox: function() {
     document.getElementById("searchBox").value = "";
+  },
+
+  addSlider2: function(text, range, filter) {
+    filter.min = range.min;
+    filter.max = range.max;
+    var id = "slider_" + text.toLowerCase().split(" ")[0];
+
+    var slider = d3.select("#filter-view").append('div')
+      .attr("class", "sliderFilter")
+      .text(text)
+      .append('div')
+      .attr("class", "slider")
+      .append('input')
+      .attr("type", "text")
+      .attr("id", id);
+    
+    $("#" + id).ionRangeSlider({
+      type: "double",
+      min: range.min,
+      max: range.max,
+      from: range.min,
+      to: range.max,
+      step:1,
+      onChange: function (data) {
+        // call controller to update filter
+        filter.min = data.from;
+        filter.max = data.to;
+        controller.notifyFilterChange();
+      }
+    });
   },
 
   addSlider: function(text, range, filter) {
