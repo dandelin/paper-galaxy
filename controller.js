@@ -5,8 +5,8 @@ function Controller() {
     this.authorHash;
     this.filters;
     this.visiblePaperList;
-    this.visibleTagList;
-    this.visibleAuthorList;
+    // this.visibleTagList;
+    // this.visibleAuthorList;
     this.currentPaper;
 }
 
@@ -25,8 +25,8 @@ Controller.prototype = {
         this.paperObj = paperObj;
 
         this.visiblePaperList = paperList;
-        this.visibleTagList = tagList;
-        this.visibleAuthorList = authorList;
+        // this.visibleTagList = tagList;
+        // this.visibleAuthorList = authorList;
     },
 
     notifyFilterChange: function() {
@@ -147,25 +147,25 @@ Controller.prototype = {
                 // add papers
                 papers.push(p);
 
-                // add tags
-                p.author_tags.forEach(function(t) {
-                    tags.pushIfNotExist(t, function(e) {
-                        return e === t;
-                    });
-                });
+                // // add tags
+                // p.author_tags.forEach(function(t) {
+                //     tags.pushIfNotExist(t, function(e) {
+                //         return e === t;
+                //     });
+                // });
 
-                // add authors
-                p.authors.forEach(function(a) {
-                    authors.pushIfNotExist(a, function(e) {
-                        return a.id === e.id;
-                    });
-                });
+                // // add authors
+                // p.authors.forEach(function(a) {
+                //     authors.pushIfNotExist(a, function(e) {
+                //         return a.id === e.id;
+                //     });
+                // });
             }
         });
 
         this.visiblePaperList = papers;
-        this.visibleTagList = tags;
-        this.visibleAuthorList = authors;
+        // this.visibleTagList = tags;
+        // this.visibleAuthorList = authors;
     },
 
     searchKeyword: function(keyword) {

@@ -34,12 +34,14 @@ var PlotView = (function() {
         
         // 라소 브러쉬를 위한 영역
         var lasso_area = scope.svg.append("rect")
-            .attr("width", scope.width)
-            .attr("height", scope.height)
+            .attr('id', 'lasso_area')
+            .attr("width", 0)
+            .attr("height", 0)
             .style("opacity", 0);
         
         // 라소의 정의
         var lasso = scope.d3.lasso()
+            .closePathDistance(1000)
             .area(lasso_area) // 영역의 정의
             .on('start', lasso_start)
             .on('draw', lasso_draw)
@@ -113,7 +115,6 @@ var PlotView = (function() {
         link
             .attr('stroke-opacity', function(d){
                 var ret = d3.select('#p' + d.id).attr('opacity');
-                console.log(ret);
                 if(ret == null) return 1;
                 else return ret;
             });
@@ -121,34 +122,41 @@ var PlotView = (function() {
         link.exit()
             .remove();
     };
+    function zoomed() {
+        d3.select('.papergroup').attr('transform', 'translate(' + d3.event.translate + ')scale(' + d3.event.scale + ')');
+        d3.select('#links').attr('transform', 'translate(' + d3.event.translate + ')scale(' + d3.event.scale + ')');
+        d3.select('#lasso_area').attr('transform', 'translate(' + d3.event.translate + ')scale(' + d3.event.scale + ')');
+    }
     return {
         init: function(data, tagList) {
-            var margin = {top: 20, right: 20, bottom: 20, left: 20};
+            var margin = {top: 0, right: 0, bottom: 0, left: 0};
             var width = document.getElementById('plot-view').offsetWidth - margin.left - margin.right;
             var height = document.getElementById('plot-view').offsetHeight - margin.top - margin.bottom;
             var x = d3.scale.linear().domain(d3.extent(data, function(d) { return d.vec2[0]; })).range([0, width]);
             var y = d3.scale.linear().domain(d3.extent(data, function(d) { return d.vec2[1]; })).range([0, height]);
-            var r = d3.scale.linear().domain(d3.extent(data, function(d) { return d.citation_count; })).range([2, 6]);
+            var r = d3.scale.linear().domain(d3.extent(data, function(d) { return d.citation_count; })).range([2, 7]);
+
+            var zoom = d3.behavior.zoom()
+                .scaleExtent([1, 10])
+                .on('zoom', function(){
+                    if(!d3.event.sourceEvent.ctrlKey){
+                        zoomed();
+                    }
+                });
 
             var svg = d3.select("#plot-view")
                 .append("svg")
                 .attr("width", width)
                 .attr("height", height)
                 .style("display", "block")
-                .style("margin", "auto");
+                .style("margin", "auto")
+                .call(zoom);
 
-
-            var lasso = makeLasso({
-                'd3': d3,
-                'svg': svg,
-                'width': width,
-                'height': height
-            });
-
-            var paperGroup = svg.append("g");
+            d3.selectAll('svg').append('g').attr('id', 'links');
+            var paperGroup = svg.append("g").attr('class', 'papergroup');
 
             //var topTags = tagList.map(function(d) {return d.tag; }).slice(6,25);
-
+            
             var papers = paperGroup.selectAll(".paper")
             papers.data(data)
                 .enter()
@@ -173,9 +181,25 @@ var PlotView = (function() {
                 .on("click", function(d) {
                   controller.updateCurrentPaper(d);
                 });
+            
+
+            var lasso = makeLasso({
+                'd3': d3,
+                'svg': svg,
+                'width': width,
+                'height': height
+            });
+
+            svg.on('mousemove', function(){
+                if(d3.event.ctrlKey){
+                    d3.select('#lasso_area').attr('width', width).attr('height', height);
+                }
+                else{
+                    d3.select('#lasso_area').attr('width', 0).attr('height', 0);
+                }
+            });
 
             lasso.items(d3.selectAll(".paper"));
-            d3.selectAll('svg').append('g').attr('id', 'links');
             paperGroup.call(lasso);
         },
         refresh: function() {
