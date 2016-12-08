@@ -25,7 +25,7 @@ var PlotView = (function() {
             
             lasso.items().style('opacity', null);
             
-            var selected = lasso.items().filter(function(d) {return d.selected===true})
+            var selected = lasso.items().filter(function(d) {return d.selected===true && !controller.isFiltered(d)})
                 .style('stroke-width', 1)
                 .style('stroke', highlightApplier);
             
