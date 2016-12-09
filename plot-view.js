@@ -52,9 +52,10 @@ var PlotView = (function() {
         return lasso;
     };
     var makeGraph = function(){
-        
         var children = [];
-        var root_node = controller.currentPaper;
+        var root_node;
+        if(controller.hoveredData) root_node = controller.hoveredData;
+        else root_node = controller.currentPaper;
         var json = controller.paperObj;
 
         d3.selectAll('.paper')
@@ -106,7 +107,7 @@ var PlotView = (function() {
             .attr('y2', function(d) { return d.y})
             .attr('stroke', function(d){
                 if(d.cited_by === true) return 'steelblue';
-                else return 'orange';
+                else return "#ff7f0e";
             })
             .attr('stroke-opacity', function(d){
                 var ret = d3.select('#p' + d.id).attr('opacity');
@@ -183,7 +184,13 @@ var PlotView = (function() {
                 //})
                 .on("click", function(d) {
                   controller.updateCurrentPaper(d);
-                });
+                })
+                .on('mouseenter', function(d){
+                    controller.mouseOnSinglePaper(d);
+                })
+                .on('mouseout', function(d){
+                    controller.mouseOutSinglePaper();
+                })
             
 
             var lasso = makeLasso({
@@ -219,6 +226,9 @@ var PlotView = (function() {
         },
         drawGraph: function() {
             makeGraph();
+        },
+        removeGraph: function() {
+            d3.select('#links').selectAll('line').remove();
         }
     };
 })();
