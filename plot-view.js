@@ -32,7 +32,7 @@ var PlotView = (function() {
                 .style('stroke-width', 1)
                 .style('stroke', highlightApplier);
             
-            SelectedView.updateSelectedPapers(selected);
+            controller.updateSelectedCircles(selected);
         };
         
         // 라소 브러쉬를 위한 영역

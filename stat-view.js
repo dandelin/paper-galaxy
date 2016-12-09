@@ -6,28 +6,77 @@ var StatView = (function() {
 
     // cooccurSvg, wordleSvg, refSvg, yearSvg
     var wordleSvg = view.append("svg")
-        .attr("width", width)
-        .attr("height", height)
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
     .append("g")
-        .attr("transfrom", "translate("+margin.left+","+margin.top+")");
+        .attr("transform", "translate("+margin.left+","+margin.top+")");
 
     return {
         update: function(selected) {
             // wordle
+            // calculate tag frequency list using wordles
             var tagObj = {}, tagList = [];
             selected.forEach(function(d) {
                 d.author_tags.forEach(function(tag) {
-                    if(tagObj["tag"]) {
-                        tagObj["tag"] = {tag: tag, freq: 1};
+                    if(!tagObj[tag]) {
+                        tagObj[tag] = {tag: tag, papers: [d]};
                     } else {
-                        tagObj["tag"]["freq"]++;
+                        tagObj[tag]["papers"].push(d);
                     }
                 });
             });
-            Object.keys(tags).forEach(function(key) {
-                tagList.push(tags[key]);
+            Object.keys(tagObj).forEach(function(key) {
+                tagList.push(tagObj[key]);
             });
-            console.log(tagList);
+            tagList.sort(function(a, b) { return b.papers.length - a.papers.length; });
+            tagList = tagList.slice(3, 33);
+
+            // create wordle layout
+            var fill = d3.scale.category10();
+            var size = d3.scale.linear().domain(d3.extent(tagList, function(d) { return d.papers.length; })).range([6, 36]);
+            var layout = d3.layout.cloud()
+                .size([width, height])
+                .words(tagList)
+                .padding(4)
+                .rotate(function(d) { return 0; })
+                .text(function(d) { return d.tag; })
+                .font("Sans-serif")
+                .fontWeight("bold")
+                .fontSize(function(d) { return size(d.papers.length); })
+                .on("end", function(data) {
+                    fill.domain(Array.apply(null, {length: data.length}).map(Number.call, Number));
+                    var text = wordleSvg.attr("transform", "translate(" + [width/2, height/2] + ")")
+                        .selectAll("text")
+                        .data(data, function(d) { return d.tag; });
+
+                    text
+                        .transition("wordle-update")
+                        .duration(300)
+                        .style("font-size", function(d) { return d.size+"px"; })
+                        .attr("fill", function(d, i) { return fill(i); })
+                        .attr("transform", function(d) { return "translate("+[d.x, d.y]+")"; });
+
+                    text.enter()
+                    .append("text")
+                        .attr("fill", function(d, i) { return fill(i); })
+                        .attr("transform", function(d) { return "translate("+[d.x, d.y]+")"; })
+                        .transition("wordle-enter")
+                        .duration(300)
+                        .style("font-size", function(d) { return d.size+"px"; })
+                        .style("font-weight", "bold")
+                        .style("font-family", "Sans-serif")
+                        .style("user-select", "none")
+                        .attr("text-anchor", "middle")
+                        .text(function(d) { return d.tag; });
+
+                    text.exit()
+                        .transition("wordle-exit")
+                        .duration(300)
+                        .style("font-size", "0px")
+                        .style("fill-opacity", 1e-6)
+                        .remove();
+                })
+                .start();
         }
     };
 })();
