@@ -1,6 +1,6 @@
 var StatView = (function() {
     // stopTags: authors tag that will be ignored
-    var stopTags = ["human computer interaction (hci)", "human-centered computing", "hci", "human factors"];
+    var stopTags = ["human computer interaction (hci)", "human-centered computing", "hci", "human factors", "design", "experimentation"];
     var tabObj = {"cooccur": {"isInit": false, "svg": {}},
                 "wordle": {"isInit": false, "svg": {}},
                 "ref": {"isInit": false, "svg": {}},
@@ -77,7 +77,7 @@ var StatView = (function() {
 
             // create wordle layout
             var fill = d3.scale.category10();
-            var size = d3.scale.linear().domain([d3.min(tagList, function(d) { return d.papers.length; })-1,d3.max(tagList, function(d) { return d.papers.length; })+2]).range([6, 36]);
+            var size = d3.scale.linear().domain([d3.min(tagList, function(d) { return Math.pow(d.papers.length, 2); })-1,d3.max(tagList, function(d) { return Math.pow(d.papers.length, 2); })+2]).range([6, 36]);
             var layout = d3.layout.cloud()
                 .size([width, height])
                 .words(tagList)
@@ -86,7 +86,7 @@ var StatView = (function() {
                 .text(function(d) { return d.tag; })
                 .font("Sans-serif")
                 .fontWeight("bold")
-                .fontSize(function(d) { return size(d.papers.length); })
+                .fontSize(function(d) { return size(Math.pow(d.papers.length, 2)); })
                 .on("end", function(data) {
                     fill.domain(Array.apply(null, {length: data.length}).map(Number.call, Number));
                     var text = wordleSvg.select("g").attr("transform", "translate(" + [width/2, height/2] + ")")
