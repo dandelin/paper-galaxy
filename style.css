@@ -10,7 +10,7 @@ html, body {
 }
 
 #filter-view {
-    height: 50%;
+    height: 40%;
     min-height: 380px;
     overflow-x: hidden;
     overflow-y: auto;
