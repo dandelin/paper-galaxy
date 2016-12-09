@@ -25,7 +25,10 @@ var StatView = (function() {
         return svg;
     }
 
-    function selectTab(tabName) {
+    function selectTab(tabName, _this) {
+        if(_this) {
+            $(_this).tab("show");
+        }
         // adjusts tabs' svg width and height
         // (to expose the selected one only)
         tabObj[currentTabName].svg.attr("width", 0);
@@ -140,6 +143,7 @@ var StatView = (function() {
             });
 
             // select default tab
+            $("#tab-"+currentTabName).tab("show");
             selectTab(currentTabName);
 
             // initalize tab click handler
