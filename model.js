@@ -51,9 +51,24 @@ var Model = (function() {
         tagList.sort(function(a,b) { return b.freq - a.freq; });
 
         // binning
-        var yearBins = generateBinArray(paperList, rangeList[0], "year");
-        var citBins = generateBinArray(paperList, rangeList[1] , "citation_count");
-        var refBins = generateBinArray(paperList, rangeList[2], "reference_count");
+        var yearBins = {};
+        var citBins = {};
+        var refBins = {};
+        yearBins.array = generateBinArray(paperList, rangeList[0], "year");
+        citBins.array = generateBinArray(paperList, rangeList[1] , "citation_count");
+        refBins.array = generateBinArray(paperList, rangeList[2], "reference_count");
+        
+        var minMax = getMinMaxCount(yearBins, "array");
+        yearBins.min = minMax.min;
+        yearBins.max = minMax.max;
+
+        minMax = getMinMaxCount(citBins, "array");
+        citBins.min = minMax.min;
+        citBins.max = minMax.max;
+
+        minMax = getMinMaxCount(refBins, "array");
+        refBins.min = minMax.min;
+        refBins.max = minMax.max;
 
         // generate occurrences
         occurrences.year = yearBins;

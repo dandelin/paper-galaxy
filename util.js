@@ -7,6 +7,14 @@ function getMinMax(json, key) {
     return { min: Math.min.apply(null, out), max: Math.max.apply(null, out) };
 }
 
+function getMinMaxCount(json, key) {
+    var out = [];
+    json[key].forEach(function(item) { 
+        return out.push(item.length); 
+    }, []);
+    return { min: Math.min.apply(null, out), max: Math.max.apply(null, out) };
+}
+
 function arrayToMinMax(array) {
     return array[0] < array[1] ? {min : array[0], max: array[1]} : {min : array[1], max: array[0]} 
 }
