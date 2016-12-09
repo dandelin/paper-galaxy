@@ -16,10 +16,8 @@ var PlotView = (function() {
         
         var lasso_draw = function() {
             lasso.items().filter(function(d) {return d.possible===true})
-                .style('stroke-width', 1)
                 .style('fill', highlightApplier);
             lasso.items().filter(function(d) {return d.possible===false})
-                .style('stroke-width', 1)
                 .style('fill', function(d) {
                     if (d === controller.currentPaper) {
                         return selectedColor; }
@@ -172,7 +170,7 @@ var PlotView = (function() {
                 .attr("cx", function(d) { return x(d.vec2[0]); })
                 .attr("cy", function(d) { return y(d.vec2[1]); })
                 .attr("r", function(d) { return r(d.citation_count); })
-                .attr("fill", "#222222")
+                .attr("fill", defaultColor)
                 //.attr("fill", function(d) {
                   //var color = d3.scale.category20().domain(topTags);
                   //var ret;
