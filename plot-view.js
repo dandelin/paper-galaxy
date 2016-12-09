@@ -1,17 +1,17 @@
-"use strict";
 function filterApplier(d) {
     return controller.isFiltered(d) ? 0.1 : 1;
 }
 
 function highlightApplier(d) {
-    return controller.isFiltered(d) ? '#333333' : "#ff7f0e";
+    return controller.isFiltered(d) ? defaultColor : lassoColor;
 }
 
+"use strict";
 var PlotView = (function() {
     var makeLasso = function(scope) {
         var lasso_start = function() {
             lasso.items()
-                .style('stroke', null);
+                .style('fill', null);
         };
         
         var lasso_draw = function() {
@@ -20,15 +20,17 @@ var PlotView = (function() {
                 .style('fill', highlightApplier);
             lasso.items().filter(function(d) {return d.possible===false})
                 .style('stroke-width', 1)
-                .style('fill', '#333333');
+                .style('fill', function(d) {
+                    if (d === controller.currentPaper) {
+                        return selectedColor; }
+                    return defaultColor;
+                });
         };
         
         var lasso_end = function() {
-            
             lasso.items().style('opacity', null);
             
             var selected = lasso.items().filter(function(d) {return d.selected===true && !controller.isFiltered(d)})
-                .style('stroke-width', 1)
                 .style('fill', highlightApplier);
             
             controller.updateSelectedCircles(selected);
