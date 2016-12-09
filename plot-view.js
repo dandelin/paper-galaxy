@@ -11,17 +11,16 @@ var PlotView = (function() {
     var makeLasso = function(scope) {
         var lasso_start = function() {
             lasso.items()
-                //.style('opacity', 0.15)
                 .style('stroke', null);
         };
         
         var lasso_draw = function() {
             lasso.items().filter(function(d) {return d.possible===true})
                 .style('stroke-width', 1)
-                .style('stroke', highlightApplier);
+                .style('fill', highlightApplier);
             lasso.items().filter(function(d) {return d.possible===false})
                 .style('stroke-width', 1)
-                .style('stroke', null);
+                .style('fill', null);
         };
         
         var lasso_end = function() {
@@ -30,7 +29,7 @@ var PlotView = (function() {
             
             var selected = lasso.items().filter(function(d) {return d.selected===true && !controller.isFiltered(d)})
                 .style('stroke-width', 1)
-                .style('stroke', highlightApplier);
+                .style('fill', highlightApplier);
             
             controller.updateSelectedCircles(selected);
         };
