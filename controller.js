@@ -1,3 +1,8 @@
+var defaultColor = "#333333";
+var lassoColor = "ec576b";
+var selectedColor = "#f19f4d";
+var hoverColor = "#f9cf00";
+
 function Controller() {
     this.paperList;
     this.tagList;
@@ -20,8 +25,8 @@ Controller.prototype = {
     },
 
     updateCurrentPaper: function(newPaper) {
-        d3.select('#p' + newPaper.id).attr('stroke', '#dd0000');
-        if(this.currentPaper) d3.select('#p' + this.currentPaper.id).attr('stroke', null);
+        d3.select('#p' + newPaper.id).attr('fill', selectedColor);
+        if(this.currentPaper) d3.select('#p' + this.currentPaper.id).attr('fill', defaultColor);
         this.currentPaper = newPaper;
         DetailView.update(newPaper);
         PlotView.drawGraph();
@@ -30,17 +35,17 @@ Controller.prototype = {
     mouseOnSinglePaper: function(paperData){
         this.hoveredData = paperData;
         this.hoveredCircle = d3.select('#p' + paperData.id);
-        this.hoveredCircle.attr('stroke', '#dd0000');
-        if(this.currentPaper) d3.select('#p' + this.currentPaper.id).attr('stroke', null);
+        this.hoveredCircle.attr('fill', hoverColor);
+        if(this.currentPaper) d3.select('#p' + this.currentPaper.id).attr('fill', defaultColor);
         DetailView.update(paperData);
         PlotView.drawGraph();
     },
 
     mouseOutSinglePaper: function(){
-        this.hoveredCircle.attr('stroke', null);
+        this.hoveredCircle.attr('fill', defaultColor);
         this.hoveredData = undefined;
         this.hoveredCircle = undefined;
-        if(this.currentPaper) d3.select('#p' + this.currentPaper.id).attr('stroke', '#dd0000');
+        if(this.currentPaper) d3.select('#p' + this.currentPaper.id).attr('fill', selectedColor);
         if(this.currentPaper) DetailView.update(this.currentPaper);
         if(this.currentPaper) PlotView.drawGraph();
         else PlotView.removeGraph();
