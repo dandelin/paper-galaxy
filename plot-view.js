@@ -4,7 +4,7 @@ function filterApplier(d) {
 }
 
 function highlightApplier(d) {
-    return controller.isFiltered(d) ? null : "#ff7f0e";
+    return controller.isFiltered(d) ? '#333333' : "#ff7f0e";
 }
 
 var PlotView = (function() {
@@ -20,7 +20,7 @@ var PlotView = (function() {
                 .style('fill', highlightApplier);
             lasso.items().filter(function(d) {return d.possible===false})
                 .style('stroke-width', 1)
-                .style('fill', null);
+                .style('fill', '#333333');
         };
         
         var lasso_end = function() {
@@ -152,6 +152,7 @@ var PlotView = (function() {
                 .attr("height", height)
                 .style("display", "block")
                 .style("margin", "auto")
+                .style('background', '#eeeeee')
                 .call(zoom);
 
             d3.selectAll('svg').append('g').attr('id', 'links');
@@ -168,7 +169,7 @@ var PlotView = (function() {
                 .attr("cx", function(d) { return x(d.vec2[0]); })
                 .attr("cy", function(d) { return y(d.vec2[1]); })
                 .attr("r", function(d) { return r(d.citation_count); })
-                .attr("fill", "black")
+                .attr("fill", "#222222")
                 //.attr("fill", function(d) {
                   //var color = d3.scale.category20().domain(topTags);
                   //var ret;

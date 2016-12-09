@@ -5,7 +5,7 @@ html, body {
 }
 
 .view {
-    border: 1px #ddd solid;
+    border: 1px #aaa solid;
     display: relative;
 }
 
@@ -14,13 +14,15 @@ html, body {
     min-height: 380px;
     overflow-x: hidden;
     overflow-y: auto;
+    background-color: #ddd;
 }
 
 #detail-view {
-    height: 50%;
+    height: 60%;
     overflow-x: hidden;
     overflow-y: auto;
     padding: 5px;
+    background-color: #ddd;
 }
 
 #detail-view .group {
@@ -43,6 +45,11 @@ html, body {
 
 #plot-view {
     height: 100%;
+    background-color: #eee;
+}
+
+#plot-view > svg {
+    background-color: #eee;
 }
 
 #selected-view {
@@ -50,6 +57,7 @@ html, body {
     overflow-x: hidden;
     overflow-y: auto;
     padding: 5px;
+    background-color: #ddd;
 }
 
 #selected-view th {
@@ -71,10 +79,12 @@ html, body {
 #stat-view {
     height: 50%;
     padding: 5px;
+    background-color: #ddd;
 }
 
 #stat-view #stat-view-tabs {
     height: 5%;
+    background-color: #ddd;
 }
 
 #stat-view #stat-view-tabs a {
