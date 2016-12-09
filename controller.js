@@ -33,8 +33,13 @@ Controller.prototype = {
     },
 
     mouseOnSinglePaper: function(paperData){
+        var inSelected = false;
+        if(this.selectedCircles){
+            if(this.selectedCircles[0].some(function(sc){ return sc.__data__.id === paperData.id; })) inSelected = true;
+        }
         this.hoveredData = paperData;
         this.hoveredCircle = d3.select('#p' + paperData.id);
+        this.hoveredCircle.inSelected = inSelected;
         this.hoveredCircle.style('fill', hoverColor);
         if(this.currentPaper) d3.select('#p' + this.currentPaper.id).style('fill', defaultColor);
         DetailView.update(paperData);
@@ -42,7 +47,8 @@ Controller.prototype = {
     },
 
     mouseOutSinglePaper: function(){
-        this.hoveredCircle.style('fill', defaultColor);
+        if(this.hoveredCircle.inSelected) this.hoveredCircle.style('fill', lassoColor);
+        else this.hoveredCircle.style('fill', defaultColor);
         this.hoveredData = undefined;
         this.hoveredCircle = undefined;
         if(this.currentPaper) d3.select('#p' + this.currentPaper.id).style('fill', selectedColor);
