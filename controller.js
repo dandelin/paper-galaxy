@@ -25,8 +25,8 @@ Controller.prototype = {
     },
 
     updateCurrentPaper: function(newPaper) {
-        d3.select('#p' + newPaper.id).attr('fill', selectedColor);
-        if(this.currentPaper) d3.select('#p' + this.currentPaper.id).attr('fill', defaultColor);
+        d3.select('#p' + newPaper.id).style('fill', selectedColor);
+        if(this.currentPaper) d3.select('#p' + this.currentPaper.id).style('fill', defaultColor);
         this.currentPaper = newPaper;
         DetailView.update(newPaper);
         PlotView.drawGraph();
@@ -35,17 +35,17 @@ Controller.prototype = {
     mouseOnSinglePaper: function(paperData){
         this.hoveredData = paperData;
         this.hoveredCircle = d3.select('#p' + paperData.id);
-        this.hoveredCircle.attr('fill', hoverColor);
-        if(this.currentPaper) d3.select('#p' + this.currentPaper.id).attr('fill', defaultColor);
+        this.hoveredCircle.style('fill', hoverColor);
+        if(this.currentPaper) d3.select('#p' + this.currentPaper.id).style('fill', defaultColor);
         DetailView.update(paperData);
         PlotView.drawGraph();
     },
 
     mouseOutSinglePaper: function(){
-        this.hoveredCircle.attr('fill', defaultColor);
+        this.hoveredCircle.style('fill', defaultColor);
         this.hoveredData = undefined;
         this.hoveredCircle = undefined;
-        if(this.currentPaper) d3.select('#p' + this.currentPaper.id).attr('fill', selectedColor);
+        if(this.currentPaper) d3.select('#p' + this.currentPaper.id).style('fill', selectedColor);
         if(this.currentPaper) DetailView.update(this.currentPaper);
         if(this.currentPaper) PlotView.drawGraph();
         else PlotView.removeGraph();
