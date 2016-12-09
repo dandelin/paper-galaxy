@@ -183,7 +183,7 @@ FilterView.prototype = {
       .attr("width", width + "px").attr("height", height + "px");
 
     x.domain(d3.extent(data.array));
-    y.domain([0, 1]);
+    y.domain([height, 0]);
 
     var gridSize = Math.floor(width / data.array.length);
     var bars = svg.selectAll(".bar").data(data.array);
@@ -196,7 +196,12 @@ FilterView.prototype = {
         return 0;
       })
       .attr("height", function(d) {
-        return height * d.length / data.max;
+        if (key == "cit") {
+          if (d.length == 0) { return 0; }
+          return height * Math.log(d.length) / Math.log(data.max);
+        } else {
+          return height * d.length / data.max;
+        }
       })
       .attr("rx", 1)
       .attr("ry", 1);
