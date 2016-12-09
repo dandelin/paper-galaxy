@@ -77,7 +77,7 @@ var StatView = (function() {
 
             // create wordle layout
             var fill = d3.scale.category10();
-            var size = d3.scale.log().domain(d3.extent(tagList, function(d) { return d.papers.length; })).range([6, 36]);
+            var size = d3.scale.linear().domain([d3.min(tagList, function(d) { return d.papers.length; })-1,d3.max(tagList, function(d) { return d.papers.length; })+2]).range([6, 36]);
             var layout = d3.layout.cloud()
                 .size([width, height])
                 .words(tagList)
@@ -140,6 +140,7 @@ var StatView = (function() {
             });
 
             // select default tab
+            $("#tab-"+currentTabName).tab("show");
             selectTab(currentTabName);
 
             // initalize tab click handler
@@ -166,6 +167,10 @@ var StatView = (function() {
             });
         },
         update: function(newPapers) {
+            // reset init status
+            Object.keys(tabObj).forEach(function(tabName) {
+                tabObj[tabName].isInit = false;
+            });
             selectedPapers = newPapers;
             selectTab(currentTabName);
         }
