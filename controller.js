@@ -40,36 +40,42 @@ Controller.prototype = {
         PlotView.drawGraph();
     },
 
-    mouseOnSinglePaper: function(paperData){
-        var inSelected = false;
-        var inCurrent = false;
+    getStatus: function(circle){
+        var circle = circle[0][0];
+        var lassoed = false;
+        var selected = false;
         if(this.selectedCircles){
-            if(this.selectedCircles[0].some(function(sc){ return sc.__data__.id === paperData.id; })) inSelected = true;
-            if(this.currentPaper){
-                if(this.currentPaper.id == paperData.id) inCurrent = true;
-            }
+            if(this.selectedCircles[0].some(function(sc){ console.log(circle); return sc.__data__.id === circle.__data__.id; })) lassoed = true;
         }
+        if(this.currentPaper){
+            if(this.currentPaper.id == circle.__data__.id) selected = true;
+        }
+        return {
+            'lassoed': lassoed,
+            'selected': selected
+        };
+    },
+
+    mouseOnSinglePaper: function(paperData){
         this.hoveredData = paperData;
         this.hoveredCircle = d3.select('#p' + paperData.id);
-        this.hoveredCircle.inSelected = inSelected;
-        this.hoveredCircle.inCurrent = inCurrent;
         this.hoveredCircle.style('fill', hoverColor);
+
         if(this.currentPaper){
-            d3.select('#p' + this.currentPaper.id).style('fill', defaultColor);
-            var id = this.currentPaper.id;
-            if(this.selectedCircles){
-                if(this.selectedCircles[0].some(function(sc){ return sc.__data__.id === id; })){
-                    d3.select('#p' + this.currentPaper.id).style('fill', lassoColor);
-                }
-            }
+            var currentCircle = d3.select('#p' + this.currentPaper.id);
+            var status = this.getStatus(currentCircle);
+            if(status.selected == true) currentCircle.style('fill', selectedColor);
+            else if(status.lassoed == true) currentCircle.style('fill', lassoColor);
+            else currentCircle.style('fill', defaultColor);
         };
         DetailView.update(paperData);
         PlotView.drawGraph();
     },
 
     mouseOutSinglePaper: function(){
-        if(this.hoveredCircle.inSelected) this.hoveredCircle.style('fill', lassoColor);
-        else if(this.hoveredCircle.inCurrent) this.hoveredCircle.style('fill', selectedColor);
+        var status = this.getStatus(this.hoveredCircle);
+        if(status.selected == true) this.hoveredCircle.style('fill', selectedColor);
+        else if(status.lassoed == true) this.hoveredCircle.style('fill', lassoColor);
         else this.hoveredCircle.style('fill', defaultColor);
         this.hoveredData = undefined;
         this.hoveredCircle = undefined;

@@ -50,9 +50,11 @@ var SelectedView = (function() {
             rows.on('mouseover', function(d){
                 d.object.setAttribute('fill', 'red');
                 d3.select(this).style('background-color', '#aaaaaa');
+                controller.mouseOnSinglePaper(d.data);
             }).on('mouseout', function(d){
                 d.object.setAttribute('fill', 'black');
                 d3.select(this).style('background-color', null);
+                controller.mouseOutSinglePaper();
             }).on('click', function(d){
                 controller.updateCurrentPaper(d.data);
                 controller.drawTree(d.object);
