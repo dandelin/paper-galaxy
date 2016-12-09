@@ -28,8 +28,7 @@ var PlotView = (function() {
         var lasso_end = function() {
             lasso.items().style('opacity', null);
             
-            var selected = lasso.items().filter(function(d) {return d.selected===true && !controller.isFiltered(d)})
-                .style('fill', highlightApplier);
+            var selected = lasso.items().filter(function(d) {return d.selected===true && !controller.isFiltered(d)});
             
             controller.updateSelectedCircles(selected);
         };

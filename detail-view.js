@@ -27,7 +27,16 @@ var DetailView = (function() {
                 .enter()
                 .append("span")
                 .attr("class", "author label label-info")
-                .html(function(d) { return d.name; });
+                .html(function(d) { return d.name; })
+                .on('mouseenter', function(d){
+                    controller.mouseOnAuthor(d.name);
+                })
+                .on('mouseout', function(d){
+                    controller.mouseOutAuthor(d.name);
+                })
+                .on('click', function(d){
+                    controller.clickAuthor(d.name);
+                });;
             selectors.author_tags.html("").selectAll("span")
                 .data(newPaper.author_tags)
                 .enter()

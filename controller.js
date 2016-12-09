@@ -19,7 +19,15 @@ function Controller() {
 
 Controller.prototype = {
     updateSelectedCircles: function(selectedCircles) {
+        var fillWithStatusSelectedChange = this.fillWithStatusSelectedChange;
+        var c = this;
+        if(this.selectedCircles){
+            this.selectedCircles[0].forEach(function(circle){
+                fillWithStatusSelectedChange.call(c, d3.select(circle));
+            })
+        }
         this.selectedCircles = selectedCircles;
+        this.selectedCircles.style('fill', highlightApplier);
         SelectedView.updateSelectedPapers(selectedCircles);
         StatView.update(selectedCircles[0].map(function(d) { return d.__data__; }));
     },
@@ -41,7 +49,6 @@ Controller.prototype = {
     },
 
     getStatus: function(circle){
-        var circle = circle[0][0];
         var lassoed = false;
         var selected = false;
         if(this.selectedCircles){
@@ -56,6 +63,19 @@ Controller.prototype = {
         };
     },
 
+    fillWithStatus: function(circle){
+        var status = this.getStatus(circle.node());
+        if(status.selected == true) circle.style('fill', selectedColor);
+        else if(status.lassoed == true) circle.style('fill', lassoColor);
+        else circle.style('fill', defaultColor);
+    },
+
+    fillWithStatusSelectedChange: function(circle){
+        var status = this.getStatus(circle.node());
+        if(status.selected == true) circle.style('fill', selectedColor);
+        else circle.style('fill', defaultColor);
+    },
+
     mouseOnSinglePaper: function(paperData){
         this.hoveredData = paperData;
         this.hoveredCircle = d3.select('#p' + paperData.id);
@@ -63,26 +83,56 @@ Controller.prototype = {
 
         if(this.currentPaper){
             var currentCircle = d3.select('#p' + this.currentPaper.id);
-            var status = this.getStatus(currentCircle);
-            if(status.selected == true) currentCircle.style('fill', selectedColor);
-            else if(status.lassoed == true) currentCircle.style('fill', lassoColor);
-            else currentCircle.style('fill', defaultColor);
+            this.fillWithStatus(currentCircle);
         };
         DetailView.update(paperData);
         PlotView.drawGraph();
     },
 
     mouseOutSinglePaper: function(){
-        var status = this.getStatus(this.hoveredCircle);
-        if(status.selected == true) this.hoveredCircle.style('fill', selectedColor);
-        else if(status.lassoed == true) this.hoveredCircle.style('fill', lassoColor);
-        else this.hoveredCircle.style('fill', defaultColor);
+        this.fillWithStatus(this.hoveredCircle);
         this.hoveredData = undefined;
         this.hoveredCircle = undefined;
         if(this.currentPaper) d3.select('#p' + this.currentPaper.id).style('fill', selectedColor);
         if(this.currentPaper) DetailView.update(this.currentPaper);
         if(this.currentPaper) PlotView.drawGraph();
         else PlotView.removeGraph();
+    },
+
+    selectCircle: function(data){
+        return d3.select('#p' + data.id).node();
+    },
+
+    circlesOfAuthor: function(name){
+        var papers = this.paperList.filter(function(paper){
+            return paper.authors.some(function(author) { return author.name == name; });
+        });
+        var selectCircle = this.selectCircle;
+        var circles = d3.select('.empty');
+        papers.forEach(function(paper){
+            circles[0].push(selectCircle(paper));
+        });
+        circles[0].splice(0, 1);
+        return circles;
+    },
+
+    mouseOnAuthor: function(name){
+        var circles = this.circlesOfAuthor(name);
+        circles.style('fill', hoverColor);
+    },
+
+    mouseOutAuthor: function(name){
+        var circles = this.circlesOfAuthor(name);
+        var fillWithStatus = this.fillWithStatus;
+        var c = this;
+        circles[0].forEach(function(circle){
+            fillWithStatus.call(c, d3.select(circle));
+        })
+    },
+
+    clickAuthor: function(name){
+        var circles = this.circlesOfAuthor(name);
+        this.updateSelectedCircles(circles);
     },
 
     init: function(paperList, tagList, authorHash, paperObj) {
