@@ -45,7 +45,7 @@ Controller.prototype = {
         var lassoed = false;
         var selected = false;
         if(this.selectedCircles){
-            if(this.selectedCircles[0].some(function(sc){ console.log(circle); return sc.__data__.id === circle.__data__.id; })) lassoed = true;
+            if(this.selectedCircles[0].some(function(sc){ return sc.__data__.id === circle.__data__.id; })) lassoed = true;
         }
         if(this.currentPaper){
             if(this.currentPaper.id == circle.__data__.id) selected = true;
