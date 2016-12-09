@@ -8,6 +8,8 @@ function Controller() {
     // this.visibleAuthorList;
     this.currentPaper;
     this.selectedCircles;
+    this.hoveredCircle;
+    this.hoveredData;
 }
 
 Controller.prototype = {
@@ -18,9 +20,30 @@ Controller.prototype = {
     },
 
     updateCurrentPaper: function(newPaper) {
+        d3.select('#p' + newPaper.id).attr('stroke', '#dd0000');
+        if(this.currentPaper) d3.select('#p' + this.currentPaper.id).attr('stroke', null);
         this.currentPaper = newPaper;
         DetailView.update(newPaper);
         PlotView.drawGraph();
+    },
+
+    mouseOnSinglePaper: function(paperData){
+        this.hoveredData = paperData;
+        this.hoveredCircle = d3.select('#p' + paperData.id);
+        this.hoveredCircle.attr('stroke', '#dd0000');
+        if(this.currentPaper) d3.select('#p' + this.currentPaper.id).attr('stroke', null);
+        DetailView.update(paperData);
+        PlotView.drawGraph();
+    },
+
+    mouseOutSinglePaper: function(){
+        this.hoveredCircle.attr('stroke', null);
+        this.hoveredData = undefined;
+        this.hoveredCircle = undefined;
+        if(this.currentPaper) d3.select('#p' + this.currentPaper.id).attr('stroke', '#dd0000');
+        if(this.currentPaper) DetailView.update(this.currentPaper);
+        if(this.currentPaper) PlotView.drawGraph();
+        else PlotView.removeGraph();
     },
 
     init: function(paperList, tagList, authorHash, paperObj) {

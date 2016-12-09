@@ -4,7 +4,7 @@ function filterApplier(d) {
 }
 
 function highlightApplier(d) {
-    return controller.isFiltered(d) ? null : "#ff7f0e";
+    return controller.isFiltered(d) ? '#333333' : "#ff7f0e";
 }
 
 var PlotView = (function() {
@@ -20,7 +20,7 @@ var PlotView = (function() {
                 .style('fill', highlightApplier);
             lasso.items().filter(function(d) {return d.possible===false})
                 .style('stroke-width', 1)
-                .style('fill', null);
+                .style('fill', '#333333');
         };
         
         var lasso_end = function() {
@@ -52,9 +52,10 @@ var PlotView = (function() {
         return lasso;
     };
     var makeGraph = function(){
-        
         var children = [];
-        var root_node = controller.currentPaper;
+        var root_node;
+        if(controller.hoveredData) root_node = controller.hoveredData;
+        else root_node = controller.currentPaper;
         var json = controller.paperObj;
 
         d3.selectAll('.paper')
@@ -106,7 +107,7 @@ var PlotView = (function() {
             .attr('y2', function(d) { return d.y})
             .attr('stroke', function(d){
                 if(d.cited_by === true) return 'steelblue';
-                else return 'orange';
+                else return "#ff7f0e";
             })
             .attr('stroke-opacity', function(d){
                 var ret = d3.select('#p' + d.id).attr('opacity');
@@ -152,6 +153,7 @@ var PlotView = (function() {
                 .attr("height", height)
                 .style("display", "block")
                 .style("margin", "auto")
+                .style('background', '#eeeeee')
                 .call(zoom);
 
             d3.selectAll('svg').append('g').attr('id', 'links');
@@ -168,7 +170,7 @@ var PlotView = (function() {
                 .attr("cx", function(d) { return x(d.vec2[0]); })
                 .attr("cy", function(d) { return y(d.vec2[1]); })
                 .attr("r", function(d) { return r(d.citation_count); })
-                .attr("fill", "black")
+                .attr("fill", "#222222")
                 //.attr("fill", function(d) {
                   //var color = d3.scale.category20().domain(topTags);
                   //var ret;
@@ -182,7 +184,13 @@ var PlotView = (function() {
                 //})
                 .on("click", function(d) {
                   controller.updateCurrentPaper(d);
-                });
+                })
+                .on('mouseenter', function(d){
+                    controller.mouseOnSinglePaper(d);
+                })
+                .on('mouseout', function(d){
+                    controller.mouseOutSinglePaper();
+                })
             
 
             var lasso = makeLasso({
@@ -218,6 +226,9 @@ var PlotView = (function() {
         },
         drawGraph: function() {
             makeGraph();
+        },
+        removeGraph: function() {
+            d3.select('#links').selectAll('line').remove();
         }
     };
 })();

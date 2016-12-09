@@ -49,7 +49,7 @@ var SelectedView = (function() {
                 
             rows.on('mouseover', function(d){
                 d.object.setAttribute('fill', 'red');
-                d3.select(this).style('background-color', '#dddddd');
+                d3.select(this).style('background-color', '#aaaaaa');
             }).on('mouseout', function(d){
                 d.object.setAttribute('fill', 'black');
                 d3.select(this).style('background-color', null);

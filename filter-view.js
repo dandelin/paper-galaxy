@@ -174,18 +174,16 @@ FilterView.prototype = {
     var height = 20; //px
 
     var x = d3.scale.ordinal(),
-      y = d3.scale.linear(),
-      xAxis = d3.svg.axis().scale(x).orient("bottom").tickSize(6, 0),
-      yAxis = d3.svg.axis().scale(y).orient("left").ticks(0);
+      y = d3.scale.linear();
     
     var svg = filterBox.append('div').attr("class", "slider_hist")
       .append("svg")
       .attr("width", width + "px").attr("height", height + "px");
 
     x.domain(d3.extent(data.array));
-    y.domain([0, 1]);
+    y.domain([height, 0]);
 
-    var gridSize = Math.floor(width / data.array.length);
+    var gridSize = Math.ceil(width / data.array.length);
     var bars = svg.selectAll(".bar").data(data.array);
 
     bars.enter().append("rect")
@@ -196,7 +194,12 @@ FilterView.prototype = {
         return 0;
       })
       .attr("height", function(d) {
-        return height * d.length / data.max;
+        if (key == "cit") {
+          if (d.length == 0) { return 1; }
+          return Math.max(height * Math.log(d.length) / Math.log(data.max), 1);
+        } else {
+          return Math.max(height * d.length / data.max, 1);
+        }
       })
       .attr("rx", 1)
       .attr("ry", 1);
