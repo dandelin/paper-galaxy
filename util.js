@@ -19,6 +19,20 @@ function initOccurrencArray(range) {
     return list;
 }
 
+function generateBinArray(data, range, key) { 
+    var maxNumberOfBins = 80;
+    var n = range.max - range.min + 1;
+
+    if (n > maxNumberOfBins) { n = maxNumberOfBins; }
+    
+    var bins = d3.layout.histogram()
+        .range([range.min, range.max])
+        .value(function(d) { return d[key]; })
+        .bins(n);
+        
+    return bins(data);
+}
+
 // check if an element exists in array using a comparer function
 // comparer : function(currentElement)
 Array.prototype.inArray = function(comparer) { 

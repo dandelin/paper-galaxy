@@ -13,7 +13,6 @@ Controller.prototype = {
     updateCurrentPaper: function(newPaper) {
         this.currentPaper = newPaper;
         DetailView.update(newPaper);
-        //CitationView.update(newPaper);
         PlotView.drawGraph();
     },
 

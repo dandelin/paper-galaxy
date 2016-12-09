@@ -7,10 +7,12 @@ function FilterView() {
   this.searchPopup;
   this.keywordBox;
   this.searchCategories = ["title", "author", "keyword"];
+  this.occurrences;
 }
 
 FilterView.prototype = {
-  init: function (rangeList) {
+  init: function (rangeList, occurrences) {
+    this.occurrences = occurrences;
     this.searchBox = d3.select("#searchBox").on("input", function() {
       if (this.value.length > 0) {
         filterView.setSearchPopupDisplay("block");
@@ -39,9 +41,9 @@ FilterView.prototype = {
         .attr("class", "keywordGroup group_"+category);
     });
 
-    filterView.addSlider2("Year", rangeList[0], this.yearFilter);
-    filterView.addSlider2("Citation Count", rangeList[1], this.citFilter);
-    filterView.addSlider2("Reference Count", rangeList[2], this.refFilter);
+    filterView.addSlider("Year", "year", rangeList[0], this.yearFilter);
+    filterView.addSlider("Citation Count", "cit", rangeList[1], this.citFilter);
+    filterView.addSlider("Reference Count", "ref", rangeList[2], this.refFilter);
   },
 
   updatePopup: function(searchResult) {
@@ -141,15 +143,15 @@ FilterView.prototype = {
     document.getElementById("searchBox").value = "";
   },
 
-  addSlider2: function(text, range, filter) {
+  addSlider: function(text, key, range, filter) {
     filter.min = range.min;
     filter.max = range.max;
-    var id = "slider_" + text.toLowerCase().split(" ")[0];
+    var id = "slider_" + key;
 
-    var slider = d3.select("#filter-view").append('div')
+    var filterBox = d3.select("#filter-view").append('div')
       .attr("class", "sliderFilter")
-      .text(text)
-      .append('div')
+      .text(text);
+    var slider =filterBox.append('div')
       .attr("class", "slider")
       .append('input')
       .attr("type", "text")
@@ -161,7 +163,7 @@ FilterView.prototype = {
       max: range.max,
       from: range.min,
       to: range.max,
-      step:1,
+      step: 1,
       onChange: function (data) {
         // call controller to update filter
         filter.min = data.from;
@@ -169,23 +171,42 @@ FilterView.prototype = {
         controller.notifyFilterChange();
       }
     });
-  },
 
-  addSlider: function(text, range, filter) {
-    filter.min = range.min;
-    filter.max = range.max;
-    d3.select("#filter-view").append('div')
-      .attr("class", "sliderFilter")
-      .text(text)
-    .append('div')
-      .attr("class", "slider")
-      .call(d3.slider().axis(true).min(range.min).max(range.max).step(1).value([range.min,range.max]).on("slide", function(evt, value) {
+    // histogram
+    var data = this.occurrences[key];
+    var paperList = controller.visiblePaperList;
+    var width = Math.round(document.getElementById("filter-view").offsetWidth - 55);
+    var height = 20; //px
 
-        // call controller to update filter
-        filter.min = arrayToMinMax(value).min;
-        filter.max = arrayToMinMax(value).max;
-        controller.notifyFilterChange();
-      }));
+
+    var x = d3.scale.ordinal(),
+      y = d3.scale.linear(),
+      xAxis = d3.svg.axis().scale(x).orient("bottom").tickSize(6, 0),
+      yAxis = d3.svg.axis().scale(y).orient("left").ticks(0);
+    
+    var svg = filterBox.append('div').attr("class", "slider_hist")
+      .append("svg")
+      .attr("width", width + "px").attr("height", height + "px");
+
+    x.domain(d3.extent(data));
+    y.domain([0, 1]);
+
+    var gridSize = Math.floor(width / data.length);
+    var bars = svg.selectAll(".bar").data(data);
+
+    bars.enter().append("rect")
+      .attr("class", "bar")
+      .attr("x", function(d, i) { return i * gridSize})
+      .attr("width", gridSize)
+      .attr("y", function(d) {
+        return 0;
+      })
+      .attr("height", function(d) {
+        return height * d.length / range.max;
+      })
+      .attr("rx", 2)
+      .attr("ry", 2);
+
   },
 
   addKeywordToFilter: function(category, keyword) {
