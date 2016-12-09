@@ -74,7 +74,7 @@ html, body {
 }
 
 #stat-view #stat-view-tabs {
-    height: 8%;
+    height: 5%;
 }
 
 #stat-view #stat-view-tabs a {
@@ -85,7 +85,7 @@ html, body {
 }
 
 #stat-view #stat-view-body {
-    height: 92%;
+    height: 95%;
 }
 
 .padding-0 {

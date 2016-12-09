@@ -6,6 +6,7 @@
     PlotView.init(paperList, tagList);
     controller.init(paperList, tagList, authorHash, paperObj);
     filterView.init(rangeList, occurrences);
+    StatView.init();
     //CitationView.init(paperObj);
   });
 })(this);
