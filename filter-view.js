@@ -188,11 +188,11 @@ FilterView.prototype = {
       .append("svg")
       .attr("width", width + "px").attr("height", height + "px");
 
-    x.domain(d3.extent(data));
+    x.domain(d3.extent(data.array));
     y.domain([0, 1]);
 
-    var gridSize = Math.floor(width / data.length);
-    var bars = svg.selectAll(".bar").data(data);
+    var gridSize = Math.floor(width / data.array.length);
+    var bars = svg.selectAll(".bar").data(data.array);
 
     bars.enter().append("rect")
       .attr("class", "bar")
@@ -202,10 +202,10 @@ FilterView.prototype = {
         return 0;
       })
       .attr("height", function(d) {
-        return height * d.length / range.max;
+        return height * d.length / data.max;
       })
-      .attr("rx", 2)
-      .attr("ry", 2);
+      .attr("rx", 1)
+      .attr("ry", 1);
 
   },
 
