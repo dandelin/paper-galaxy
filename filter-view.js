@@ -1,5 +1,6 @@
 function FilterView() {
   this.keywordFilter = {}; // title, author, keyword
+  this.keywordFilterList = [];
   this.yearFilter = {};
   this.citFilter = {};
   this.refFilter = {};
@@ -35,11 +36,8 @@ FilterView.prototype = {
     
     this.keywordBox = d3.select(".searchFilter").append('div')
       .attr("class", "keywordBox");
-
-    this.searchCategories.forEach(function(category) {
-      filterView.keywordBox.append('div')
-        .attr("class", "keywordGroup group_"+category);
-    });
+    filterView.keywordBox.append('div')
+      .attr("class", "keywordGroup");
 
     filterView.addSlider("Year", "year", rangeList[0], this.yearFilter);
     filterView.addSlider("Citation Count", "cit", rangeList[1], this.citFilter);
@@ -110,24 +108,21 @@ FilterView.prototype = {
   },
 
   updateKeywordBox: function() {
-    Object.keys(this.keywordFilter).forEach(function(key) {
-      var group = filterView.keywordBox.select(".group_" + key);
-      var element = group.selectAll("span")
-        .data(filterView.keywordFilter[key]);
-      element.enter().append("span")
-        .attr("class", "keyword label " + filterView.getLabelType(key))
-        .text(function(d) {return d;})
-        .on("click", function() {
-          filterView.removeKeywordFromFilter(key, d3.select(this).text());
-          this.remove();
-        });
-      element.exit().remove();
-      if (filterView.keywordFilter[key].length > 0) {
-        group.style("display", "block");
-      } else {
-        group.style("display", "none");
-      }
-    });
+    var element = filterView.keywordBox.select(".keywordGroup").selectAll("span")
+      .data(this.keywordFilterList);
+    
+    element.enter().append("span")
+      .attr("class", "keyword label label-info")
+      .text(function(d) {return d;})
+      .style("cursor", "pointer")
+      .on("click", function() {
+        var text = d3.select(this).text();
+        var category = text.split(":")[0].trim();
+        var keyword = text.split(":")[1].trim();
+        filterView.removeKeywordFromFilter(category, keyword);
+        this.remove();
+      });
+    element.exit().remove();
   },
 
   getLabelType: function(category) {
@@ -178,7 +173,6 @@ FilterView.prototype = {
     var width = Math.round(document.getElementById("filter-view").offsetWidth - 55);
     var height = 20; //px
 
-
     var x = d3.scale.ordinal(),
       y = d3.scale.linear(),
       xAxis = d3.svg.axis().scale(x).orient("bottom").tickSize(6, 0),
@@ -206,18 +200,22 @@ FilterView.prototype = {
       })
       .attr("rx", 1)
       .attr("ry", 1);
-
   },
 
   addKeywordToFilter: function(category, keyword) {
     this.keywordFilter[category].pushIfNotExist(keyword, function(elm) {
       return elm === keyword;
     });
+    var s = category + ":" + keyword;
+    filterView.keywordFilterList.pushIfNotExist(s, function(elm) {
+      return elm === s;
+    });
     controller.notifyFilterChange();
   },
 
   removeKeywordFromFilter: function(category, keyword) {
     this.keywordFilter[category].removeIfExist(keyword);
+    this.keywordFilterList.removeIfExist(category + ":" + keyword);
     controller.notifyFilterChange();
   },
   
