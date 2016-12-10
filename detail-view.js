@@ -1,7 +1,8 @@
 "use strict";
 var DetailView = (function() {
     var view = d3.select("#detail-view");
-    var attributes = ["title", "publication_date", "authors", "author_tags", "citation_count", "abstract"];
+    var linkFormat = "http://dl.acm.org/citation.cfm?id=";
+    var attributes = ["title", "link", "publication_date", "authors", "author_tags", "citation_count", "abstract"];
 
     var selectors = [];
 
@@ -21,6 +22,11 @@ var DetailView = (function() {
         update: function(newPaper) {
             // update view contents
             selectors.title.html(newPaper.title);
+            selectors.link.html("").append("a")
+                .attr("href", linkFormat+newPaper.id)
+                .attr("target", "_blank")
+                .style("font-size", "8px")
+                .html(linkFormat+newPaper.id);
             selectors.publication_date.html(newPaper.publication_date);
             selectors.authors.html("").selectAll("span")
                 .data(newPaper.authors)
@@ -36,7 +42,7 @@ var DetailView = (function() {
                 })
                 .on('click', function(d){
                     controller.clickAuthor(d.name);
-                });;
+                });
             selectors.author_tags.html("").selectAll("span")
                 .data(newPaper.author_tags)
                 .enter()
