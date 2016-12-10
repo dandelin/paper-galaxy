@@ -33,6 +33,7 @@ Controller.prototype = {
     },
 
     updateCurrentPaper: function(newPaper) {
+        if (this.currentPaper === newPaper) { return; }
         d3.select('#p' + newPaper.id).style('fill', selectedColor);
         if(this.currentPaper){
             d3.select('#p' + this.currentPaper.id).style('fill', defaultColor);
