@@ -51,9 +51,9 @@ var StatView = (function() {
         currentTabName = tabName;
 
         function initCooccur(selectedPapers, cooccurSvg) {
-            var matrixLength = width > height ? width * 0.85 : height * 0.85;
-            var matrixMargin = {top: height * 0.06, bottom: 0, left: width * 0.15, right: 0};
-            var x = d3.scale.ordinal().rangeRoundBands([0, matrixLength]);
+            var matrixLength = width > height ? width * 0.80 : height * 0.80;
+            var matrixMargin = {top: height * 0.12, bottom: 0, left: width * 0.18, right: 0};
+            var x = d3.scale.ordinal().rangeBands([0, matrixLength]);
             var z = d3.scale.linear().range([0, 1]);
 
             // authorDic will contain author info and index to matrix row
@@ -72,10 +72,12 @@ var StatView = (function() {
 
             // allocate cell objects to matrix while leaving occurence frequency (z here) to 0
             Object.keys(authorDic).forEach(function(authorId) {
-                matrix[authorDic[authorId].index] =
-                    Object.keys(authorDic)
-                    .map(function(authorId2) { return {x: authorDic[authorId2], y: authorDic[authorId], z: 0}; })
-                    .sort(function(a, b) { return a.x.index - b.x.index; });
+                matrix[authorDic[authorId].index] = {
+                    y: authorDic[authorId],
+                    cells: Object.keys(authorDic)
+                        .map(function(authorId2) { return {x: authorDic[authorId2], z: 0}; })
+                        .sort(function(a, b) { return a.x.index - b.x.index; })
+                };
             });
 
             // count co-occurence frequency (z value)
@@ -83,22 +85,18 @@ var StatView = (function() {
                 paper.authors.forEach(function(author, i) {
                     paper.authors.forEach(function(author2, j) {
                         if (i==j) {
-                            matrix[authorDic[author.id].index][authorDic[author2.id].index].z++;
+                            matrix[authorDic[author.id].index].cells[authorDic[author2.id].index].z += 1/paper.authors.length;
                         }
                         if (i<j) {
-                            matrix[authorDic[author.id].index][authorDic[author2.id].index].z++;
-                            matrix[authorDic[author2.id].index][authorDic[author.id].index].z++;
+                            matrix[authorDic[author.id].index].cells[authorDic[author2.id].index].z += 1/paper.authors.length;
+                            matrix[authorDic[author2.id].index].cells[authorDic[author.id].index].z += 1/paper.authors.length;
                         }
                     });
                 });
             });
 
             x.domain(Object.keys(authorDic).map(function(authorId) { return authorDic[authorId].index; }));
-            z.domain([0, d3.max([].concat.apply([], matrix).map(function(cell) { return cell.z; }))]);
-            //console.log(matrix);
-            //console.log(d3.extent([].concat.apply([], matrix).map(function(cell) { return cell.z; })));
-            //console.log([].concat.apply([], matrix).map(function(cell) { return cell.z; }));
-            //console.log(z);
+            z.domain([0, d3.max([].concat.apply([], matrix.map(function(row) { return row.cells; })).map(function(cell) { return cell.z; }))]);
 
             var container = cooccurSvg.select("g")
               .html("")
@@ -113,13 +111,34 @@ var StatView = (function() {
 
             var row = container
                 .selectAll(".row")
-                .data(matrix)
-            .enter().append("g")
+                .data(matrix);
+
+            // column text
+            row.enter().append("text")
+                .attr("transform", function(d) { return "translate(" + x(d.y.index) + ",0) rotate(-45)"; })
+                .attr("x", 9)
+                .attr("y", x.rangeBand() / 2)
+                .attr("dy", ".32em")
+                .attr("text-anchor", "start")
+                .attr("font-size", "3px")
+                .text(function(d) { return d.y.name; });
+            
+            // row text
+            row.enter().append("text")
+                .attr("transform", function(d) { return "translate(0," + x(d.y.index) + ")"; })
+                .attr("x", -2)
+                .attr("y", x.rangeBand() / 2)
+                .attr("dy", ".32em")
+                .attr("text-anchor", "end")
+                .attr("font-size", "3px")
+                .text(function(d) { return d.y.name; });
+
+            row.enter().append("g")
                 .attr("class", "row")
-                .attr("transform", function(d, i) { return "translate(0," + x(i) + ")"; })
+                .attr("transform", function(d) { return "translate(0," + x(d.y.index) + ")"; })
                 .each(function(row) {
                     var cell = d3.select(this).selectAll(".cell")
-                        .data(row.filter(function(d) { return d.z; }))
+                        .data(row.cells)
                     .enter().append("rect")
                         .attr("class", "cell")
                         .attr("x", function(d) { return x(d.x.index); })
@@ -130,13 +149,6 @@ var StatView = (function() {
                     
                 });
 
-            row.append("text")
-                .attr("x", -6)
-                .attr("y", x.rangeBand() / 2)
-                .attr("dy", ".32em")
-                .attr("text-anchor", "end")
-                .attr("font-size", "8px")
-                .text(function(d) { return "dummy"; });
         }
 
         function initWordle(selectedPapers, wordleSvg) {
