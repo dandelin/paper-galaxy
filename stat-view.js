@@ -51,10 +51,9 @@ var StatView = (function() {
         currentTabName = tabName;
 
         function initCooccur(selectedPapers, cooccurSvg) {
-            var matrixWidth = width * 0.85;
-            var matrixHeight = height * 0.85;
-            var matrixMargin = {top: height * 0.10, bottom: 0, left: width * 0.10, right: 0};
-            var x = d3.scale.ordinal().rangeBands([0, matrixWidth]);
+            var matrixLength = width > height ? width * 0.85 : height * 0.85;
+            var matrixMargin = {top: height * 0.06, bottom: 0, left: width * 0.15, right: 0};
+            var x = d3.scale.ordinal().rangeRoundBands([0, matrixLength]);
             var z = d3.scale.linear().range([0, 1]);
 
             // authorDic will contain author info and index to matrix row
@@ -101,17 +100,18 @@ var StatView = (function() {
             //console.log([].concat.apply([], matrix).map(function(cell) { return cell.z; }));
             //console.log(z);
 
-            cooccurSvg.select("g").html("");
+            var container = cooccurSvg.select("g")
+              .html("")
+              .attr("transform", function(d) { return "translate("+matrixMargin.left+","+matrixMargin.top+")" })
 
-            cooccurSvg.select("g")
+            container
                 .append("rect")
                 .attr("class", "background")
-                .attr("width", matrixWidth)
-                .attr("height", matrixHeight)
-                .style("fill", "white");
+                .attr("width", matrixLength)
+                .attr("height", matrixLength)
+                .style("fill", "#ddd");
 
-            var row = cooccurSvg.select("g")
-                .attr("transform", function(d) { return "translate("+matrixMargin.left+","+matrixMargin.top+")" })
+            var row = container
                 .selectAll(".row")
                 .data(matrix)
             .enter().append("g")
@@ -130,15 +130,12 @@ var StatView = (function() {
                     
                 });
 
-            row.append("line")
-                .attr("x2", matrixWidth);
-
             row.append("text")
                 .attr("x", -6)
                 .attr("y", x.rangeBand() / 2)
                 .attr("dy", ".32em")
                 .attr("text-anchor", "end")
-                .attr("font-size", "9px")
+                .attr("font-size", "8px")
                 .text(function(d) { return "dummy"; });
         }
 
