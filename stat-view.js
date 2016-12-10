@@ -51,11 +51,108 @@ var StatView = (function() {
         currentTabName = tabName;
 
         function initCooccur(selectedPapers, cooccurSvg) {
-            console.log("initCooccur");
+            var matrixLength = width > height ? width * 0.80 : height * 0.80;
+            var matrixMargin = {top: height * 0.12, bottom: 0, left: width * 0.18, right: 0};
+            var x = d3.scale.ordinal().rangeBands([0, matrixLength]);
+            var z = d3.scale.linear().range([0, 1]);
+
+            // authorDic will contain author info and index to matrix row
+            // matrix will contain co-occurence matrix
+            var authorDic = {}, matrix = [], index=0;
+
+            // find every authors and allocate index
+            selectedPapers.forEach(function(paper) {
+                paper.authors.forEach(function(author) {
+                    if(!authorDic[author.id]) {
+                        authorDic[author.id] = author;
+                        authorDic[author.id].index = index++;
+                    }
+                });
+            });
+
+            // allocate cell objects to matrix while leaving occurence frequency (z here) to 0
+            Object.keys(authorDic).forEach(function(authorId) {
+                matrix[authorDic[authorId].index] = {
+                    y: authorDic[authorId],
+                    cells: Object.keys(authorDic)
+                        .map(function(authorId2) { return {x: authorDic[authorId2], z: 0}; })
+                        .sort(function(a, b) { return a.x.index - b.x.index; })
+                };
+            });
+
+            // count co-occurence frequency (z value)
+            selectedPapers.forEach(function(paper) {
+                paper.authors.forEach(function(author, i) {
+                    paper.authors.forEach(function(author2, j) {
+                        if (i==j) {
+                            matrix[authorDic[author.id].index].cells[authorDic[author2.id].index].z += 1/paper.authors.length;
+                        }
+                        if (i<j) {
+                            matrix[authorDic[author.id].index].cells[authorDic[author2.id].index].z += 1/paper.authors.length;
+                            matrix[authorDic[author2.id].index].cells[authorDic[author.id].index].z += 1/paper.authors.length;
+                        }
+                    });
+                });
+            });
+
+            x.domain(Object.keys(authorDic).map(function(authorId) { return authorDic[authorId].index; }));
+            z.domain([0, d3.max([].concat.apply([], matrix.map(function(row) { return row.cells; })).map(function(cell) { return cell.z; }))]);
+
+            var container = cooccurSvg.select("g")
+              .html("")
+              .attr("transform", function(d) { return "translate("+matrixMargin.left+","+matrixMargin.top+")" })
+
+            container
+                .append("rect")
+                .attr("class", "background")
+                .attr("width", matrixLength)
+                .attr("height", matrixLength)
+                .style("fill", "#ddd");
+
+            var row = container
+                .selectAll(".row")
+                .data(matrix);
+
+            // column text
+            row.enter().append("text")
+                .attr("transform", function(d) { return "translate(" + x(d.y.index) + ",0) rotate(-45)"; })
+                .attr("x", 9)
+                .attr("y", x.rangeBand() / 2)
+                .attr("dy", ".32em")
+                .attr("text-anchor", "start")
+                .attr("font-size", "3px")
+                .text(function(d) { return d.y.name; });
+            
+            // row text
+            row.enter().append("text")
+                .attr("transform", function(d) { return "translate(0," + x(d.y.index) + ")"; })
+                .attr("x", -2)
+                .attr("y", x.rangeBand() / 2)
+                .attr("dy", ".32em")
+                .attr("text-anchor", "end")
+                .attr("font-size", "3px")
+                .text(function(d) { return d.y.name; });
+
+            row.enter().append("g")
+                .attr("class", "row")
+                .attr("transform", function(d) { return "translate(0," + x(d.y.index) + ")"; })
+                .each(function(row) {
+                    var cell = d3.select(this).selectAll(".cell")
+                        .data(row.cells)
+                    .enter().append("rect")
+                        .attr("class", "cell")
+                        .attr("x", function(d) { return x(d.x.index); })
+                        .attr("width", x.rangeBand())
+                        .attr("height", x.rangeBand())
+                        .attr("fill-opacity", function(d) { console.log(d.z, z(d.z)); return z(d.z); })
+                        .attr("fill", "steelblue");
+                    
+                });
+
         }
 
         function initWordle(selectedPapers, wordleSvg) {
-            // calculate tag frequency list using wordles
+            // calculate tag frequency list
             var tagObj = {}, tagList = [];
             selectedPapers.forEach(function(d) {
                 d.author_tags.forEach(function(tag) {
@@ -88,7 +185,7 @@ var StatView = (function() {
                 .fontWeight("bold")
                 .fontSize(function(d) { return size(Math.pow(d.papers.length, 2)); })
                 .on("end", function(data) {
-                    fill.domain(Array.apply(null, {length: data.length}).map(Number.call, Number));
+                    fill.domain(d3.range(data.length));
                     var text = wordleSvg.select("g").attr("transform", "translate(" + [width/2, height/2] + ")")
                         .selectAll("text")
                         .data(data, function(d) { return d.tag; });

@@ -82,20 +82,38 @@ html, body {
     background-color: #ddd;
 }
 
+#stat-view .nav-tabs {
+    border-bottom: 1px solid #ccc;
+}
+
+#stat-view #stat-view-tabs li {
+    background-color: #ddd;
+}
+
+#stat-view #stat-view-tabs li:hover {
+    background-color: #ddd;
+}
+
+
 #stat-view #stat-view-tabs {
-    height: 5%;
+    height: 6%;
     background-color: #ddd;
 }
 
 #stat-view #stat-view-tabs a {
-    padding: 5px 2px;
-    font-size: 11px;
+    padding: 5px 1px;
+    font-size: 6px;
     font-weight: bold;
     user-select: none;
+    background-color: #ccc;
+}
+
+#stat-view #stat-view-tabs li.active > a{
+    background-color: #ddd;
 }
 
 #stat-view #stat-view-body {
-    height: 95%;
+    height: 94%;
 }
 
 .padding-0 {
