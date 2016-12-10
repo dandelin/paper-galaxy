@@ -141,7 +141,7 @@ var PlotView = (function() {
             var zoom = d3.behavior.zoom()
                 .scaleExtent([1, 10])
                 .on('zoom', function(){
-                    if(!d3.event.sourceEvent.ctrlKey){
+                    if(d3.event.sourceEvent && !d3.event.sourceEvent.ctrlKey){
                         zoomed();
                     }
                 });
