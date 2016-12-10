@@ -144,7 +144,7 @@ var StatView = (function() {
                         .attr("x", function(d) { return x(d.x.index); })
                         .attr("width", x.rangeBand())
                         .attr("height", x.rangeBand())
-                        .attr("fill-opacity", function(d) { console.log(d.z, z(d.z)); return z(d.z); })
+                        .attr("fill-opacity", function(d) { return z(d.z); })
                         .attr("fill", "steelblue");
                     
                 });
