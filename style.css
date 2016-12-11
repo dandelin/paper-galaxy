@@ -72,10 +72,6 @@ html, body {
     margin-bottom: 2px;
 }
 
-#plot-view {
-    height: 100%;
-}
-
 #stat-view {
     height: 50%;
     padding: 5px;

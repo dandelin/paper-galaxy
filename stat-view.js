@@ -5,7 +5,7 @@ var StatView = (function() {
                 "wordle": {"isInit": false, "svg": {}},
                 "ref": {"isInit": false, "svg": {}},
                 "year": {"isInit": false, "svg": {}}};
-    var currentTabName = "cooccur";
+    var currentTabName = "wordle";
     var selectedPapers = [];
 
     var view = d3.select("#stat-view-body");
