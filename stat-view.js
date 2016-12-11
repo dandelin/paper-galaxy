@@ -53,8 +53,8 @@ var StatView = (function() {
         function initCooccur(selectedPapers, cooccurSvg) {
             if (!selectedPapers || selectedPapers.length == 0) { return; }
 
-            var matrixLength = width > height ? width * 0.80 : height * 0.80;
-            var matrixMargin = {top: height * 0.12, bottom: 0, left: width * 0.18, right: 0};
+            var matrixLength = width > height ? width * 0.75 : height * 0.75;
+            var matrixMargin = {top: height * 0.25, bottom: 0, left: width * 0.25, right: 0};
             var x = d3.scale.ordinal().rangeBands([0, matrixLength]);
             var z = d3.scale.linear().range([0, 1]);
 
@@ -117,10 +117,8 @@ var StatView = (function() {
 
             // column text
             row.enter().append("text")
-                .attr("transform", function(d) { return "translate(" + x(d.y.index) + ",0) rotate(-45)"; })
-                .attr("x", 9)
-                .attr("y", x.rangeBand() / 2)
-                .attr("dy", ".32em")
+                .attr("transform", function(d) { return "translate(" + (x(d.y.index)+x.rangeBand()/2) + ",0) rotate(-45)"; })
+                .attr("dx", "2em")
                 .attr("text-anchor", "start")
                 .attr("font-size", "3px")
                 .text(function(d) { return d.y.name; });
@@ -128,9 +126,8 @@ var StatView = (function() {
             // row text
             row.enter().append("text")
                 .attr("transform", function(d) { return "translate(0," + x(d.y.index) + ")"; })
-                .attr("x", -2)
                 .attr("y", x.rangeBand() / 2)
-                .attr("dy", ".32em")
+                .attr("dx", "-1em")
                 .attr("text-anchor", "end")
                 .attr("font-size", "3px")
                 .text(function(d) { return d.y.name; });
