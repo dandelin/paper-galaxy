@@ -21,6 +21,8 @@ var SelectedView = (function() {
             data.sort(function(a, b){
                 return parseInt(b.data.citation_count) - parseInt(a.data.citation_count);
             });
+
+            tbody.html("");
             
             var rows = tbody.selectAll('tr')
                 .data(data, function(d){
@@ -30,10 +32,6 @@ var SelectedView = (function() {
             rows
                 .enter()
                 .append('tr');
-
-            rows
-                .exit()
-                .remove();
                 
             var cells = rows.selectAll('td')
                 .data(function(row){
