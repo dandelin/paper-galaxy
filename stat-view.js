@@ -178,9 +178,9 @@ var StatView = (function() {
 
             // create wordle layout
             var fill = d3.scale.category10();
-            var size = d3.scale.linear().domain([d3.min(tagList, function(d) { return Math.pow(d.papers.length, 2); })-1,d3.max(tagList, function(d) { return Math.pow(d.papers.length, 2); })+2]).range([6, 36]);
+            var size = d3.scale.linear().domain([d3.min(tagList, function(d) { return Math.pow(d.papers.length, 2); })-1,d3.max(tagList, function(d) { return Math.pow(d.papers.length, 2); })+2]).range([6, 26]);
             var layout = d3.layout.cloud()
-                .size([width, height])
+                .size([width*1.5, height])
                 .words(tagList)
                 .padding(3)
                 .rotate(function(d) { return 0; })
