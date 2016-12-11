@@ -51,6 +51,8 @@ var StatView = (function() {
         currentTabName = tabName;
 
         function initCooccur(selectedPapers, cooccurSvg) {
+            if (!selectedPapers || selectedPapers.length == 0) { return; }
+
             var matrixLength = width > height ? width * 0.80 : height * 0.80;
             var matrixMargin = {top: height * 0.12, bottom: 0, left: width * 0.18, right: 0};
             var x = d3.scale.ordinal().rangeBands([0, matrixLength]);
@@ -152,6 +154,8 @@ var StatView = (function() {
         }
 
         function initWordle(selectedPapers, wordleSvg) {
+            if (!selectedPapers || selectedPapers.length == 0) { return; }
+
             // calculate tag frequency list
             var tagObj = {}, tagList = [];
             selectedPapers.forEach(function(d) {
@@ -201,6 +205,24 @@ var StatView = (function() {
                     .append("text")
                         .attr("fill", function(d, i) { return fill(i); })
                         .attr("transform", function(d) { return "translate("+[d.x, d.y]+")"; })
+                        .on("mouseover", function(word) {
+                            var paperIds = controller.paperList.map(function(d) { return d.id; });
+                            controller.mouseOnMultipleCircles(d3.selectAll(".paper")
+                                .filter(function(paper) { return paper.author_tags.includes(word.tag) && paperIds.includes(paper.id); }));
+                        })
+                        .on("mouseout", function(word) {
+                            var paperIds = controller.paperList.map(function(d) { return d.id; });
+                            controller.mouseOutMultipleCircles(d3.selectAll(".paper")
+                                .filter(function(paper) { return paper.author_tags.includes(word.tag) && paperIds.includes(paper.id); }));
+                        })
+                        .on("click", function(word) {
+                            var paperIds = controller.paperList.map(function(d) { return d.id; });
+                            controller.updateSelectedCircles(d3.selectAll(".paper")
+                                .filter(function(paper) { return paper.author_tags.includes(word.tag) && paperIds.includes(paper.id); }));
+                            //var paperIds = word.papers.map(function(d) { return d.id; });
+                            //controller.updateSelectedCircles(d3.selectAll(".paper")
+                                //.filter(function(paper) { return paperIds.includes(paper.id); }));
+                        })
                         .transition("wordle-enter")
                         .duration(300)
                         .style("font-size", function(d) { return d.size+"px"; })
@@ -221,7 +243,9 @@ var StatView = (function() {
         }
 
         function initRef(selectedPapers, refSvg) {
-            console.log("initRef");
+            if (!selectedPapers || selectedPapers.length == 0) { return; }
+
+            var paperObj = controller.paperObj;
         }
 
         function initYear(selectedPapers, yearSvg) {

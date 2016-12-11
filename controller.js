@@ -100,6 +100,17 @@ Controller.prototype = {
         else PlotView.removeGraph();
     },
 
+    mouseOnMultipleCircles: function(hoveredCircles) {
+        //this.hoveredPapers = hoveredPapers;
+        hoveredCircles.style('fill', hoverColor);
+    },
+
+    mouseOutMultipleCircles: function(hoveredCircles) {
+        hoveredCircles.style('fill', defaultColor);
+        if(this.currentPaper) d3.select('#p' + this.currentPaper.id).style('fill', selectedColor);
+        if(this.selectedCircles) this.selectedCircles.style('fill', lassoColor);
+    },
+
     selectCircle: function(data){
         return d3.select('#p' + data.id).node();
     },
