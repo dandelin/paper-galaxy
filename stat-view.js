@@ -225,7 +225,43 @@ var StatView = (function() {
         }
 
         function initYear(selectedPapers, yearSvg) {
-            console.log("initYear");
+            if (!selectedPapers || selectedPapers.length == 0) { return; }
+            var bins = {};
+            selectedPapers.forEach(function(p) {
+                if (!bins[p.year]) { bins[p.year] = []; }
+                bins[p.year].push(p);
+            });
+            var years = Object.keys(bins);
+            years.sort();
+
+            var max = bins[years.reduce(function(a, b){ 
+                return bins[a].length > bins[b].length ? a : b 
+            })].length;
+
+            var x = d3.scale.ordinal().domain(d3.extent(years)),
+                y = d3.scale.linear().domain([height, 0]);
+            var xAxis = d3.svg.axis().scale(x).orient("bottme"),
+                yAxis = d3.svg.axis().scale(y).orient("left");
+            
+            var gridMargin = 10;
+            var gridSize = Math.ceil((width - gridMargin) / years.length) - gridMargin;
+            var g = yearSvg.select("g");
+            g.selectAll(".bar").remove();
+            var bars = g.selectAll(".bar").data(years);
+
+            bars.enter().append("rect")
+                .attr("class", "bar")
+                .attr("x", function(d, i) { return gridMargin + i * (gridSize + gridMargin); })
+                .attr("width", gridSize)
+                .attr("y", function(d) {
+                    return height * (1- bins[d].length / max);
+                })
+                .attr("height", function(d) {
+                    return height * (bins[d].length / max);
+                })
+                .attr("rx", 1)
+                .attr("ry", 1);
+
         }
     }
 

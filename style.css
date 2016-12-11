@@ -112,6 +112,10 @@ html, body {
     height: 94%;
 }
 
+#stat-view .bar {
+    fill: midnightblue;
+}
+
 .padding-0 {
     padding: 0 !important;
     margin: 0 !important;
