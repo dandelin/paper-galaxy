@@ -242,7 +242,81 @@ var StatView = (function() {
         function initRef(selectedPapers, refSvg) {
             if (!selectedPapers || selectedPapers.length == 0) { return; }
 
-            var paperObj = controller.paperObj;
+            // refedDic will contain referenced papers and the referrers
+            var refedDic = {}, refedList = [];
+            var paperNumLimit = 6;
+            var histMargin = {top: 10, bottom: 40, left: 30, right: 10};
+            var histWidth = width * 0.8, histHeight = height * 0.8;
+
+            var x = d3.scale.linear().range([0, histWidth]);
+            var y = d3.scale.ordinal().rangeBands([0, histHeight]);
+            var fill = d3.scale.category10().domain(d3.range(paperNumLimit));
+
+            // find every authors and allocate index
+            selectedPapers.forEach(function(paper) {
+                paper.references.forEach(function(refedPaperId) {
+                    if(!refedDic[refedPaperId]) {
+                        refedDic[refedPaperId] = {paper: controller.paperObj[refedPaperId], referrers: [paper]};
+                    } else {
+                        refedDic[refedPaperId].referrers.push(paper);
+                    }
+                });
+            });
+
+            Object.keys(refedDic).forEach(function(refedPaperId) {
+                refedList.push(refedDic[refedPaperId]);
+            });
+
+            refedList.sort(function(a, b) { return b.referrers.length - a.referrers.length; });
+            refedList = refedList.slice(0, paperNumLimit);
+
+            x.domain([0, d3.max(refedList.map(function(d) { return d.referrers.length; }))]);
+            y.domain(d3.range(refedList.length));
+
+            refSvg.select("g")
+                .attr("transform", "translate("+margin.left+","+margin.top+")");
+
+            var barGroup = refSvg.select("g")
+                .selectAll(".bar-group")
+                .data(refedList, function(d) { return d.paper.id; });
+
+            barGroup.enter()
+                .append("g")
+                .attr("class", "bar-group")
+                .attr("transform", function(d, i) { return "translate(0, " + y(i) + ")"; });
+
+            barGroup
+                .transition()
+                .duration(200)
+                .attr("transform", function(d, i) { return "translate(0, " + y(i) + ")"; });
+
+            barGroup.append("rect") 
+                .attr("class", "bar")
+                .attr("width", function(d) { return x(d.referrers.length); })
+                .attr("height", y.rangeBand()/2)
+                .attr("y", y.rangeBand()/4)
+                .style("fill", function(d, i) { return fill(i); });
+
+            barGroup.append("text") 
+                .attr("class", "count")
+                .attr("dominant-baseline", "central")
+                .attr("text-anchor", "end")
+                .attr("x", function(d) { return x(d.referrers.length); })
+                .attr("dx", "-3px")
+                .attr("y", y.rangeBand()/2)
+                .style("font-size", "6px")
+                .style("fill", "white")
+                .text(function(d) { return d.referrers.length; });
+
+            barGroup.append("text")
+                .attr("class", "label")
+                .attr("y", y.rangeBand()*3/4)
+                .attr("dominant-baseline", "text-before-edge")
+                .style("font-size", "11px")
+                .text(function(d) { return d.paper.title; });
+
+            barGroup.exit()
+                .remove();
         }
 
         function initYear(selectedPapers, yearSvg) {

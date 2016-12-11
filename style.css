@@ -112,7 +112,7 @@ html, body {
     height: 94%;
 }
 
-#stat-view .bar {
+#stat-view #year-svg .bar {
     fill: midnightblue;
 }
 
