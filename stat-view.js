@@ -176,8 +176,7 @@ var StatView = (function() {
             // create wordle layout
             var fill = d3.scale.category10();
             var size = d3.scale.linear().domain([d3.min(tagList, function(d) { return Math.pow(d.papers.length, 2); })-1,d3.max(tagList, function(d) { return Math.pow(d.papers.length, 2); })+2]).range([6, 28]);
-            if(tagList[0].tag.length > 12) {
-                console.log(tagList[0].tag);
+            if(tagList[0].tag.length > 18) {
                 size.range([6, 18]);
             }
             var layout = d3.layout.cloud()
@@ -248,7 +247,7 @@ var StatView = (function() {
 
             // refedDic will contain referenced papers and the referrers
             var refedDic = {}, refedList = [];
-            var paperNumLimit = 6;
+            var paperNumLimit = 7;
             var histMargin = {top: 10, bottom: 40, left: 30, right: 10};
             var histWidth = width * 0.8, histHeight = height * 0.8;
 
@@ -284,42 +283,108 @@ var StatView = (function() {
                 .selectAll(".bar-group")
                 .data(refedList, function(d) { return d.paper.id; });
 
-            barGroup.enter()
-                .append("g")
-                .attr("class", "bar-group")
-                .attr("transform", function(d, i) { return "translate(0, " + y(i) + ")"; });
-
+            // update
             barGroup
                 .transition()
-                .duration(200)
+                .duration(300)
                 .attr("transform", function(d, i) { return "translate(0, " + y(i) + ")"; });
 
-            barGroup.append("rect") 
-                .attr("class", "bar")
+            barGroup.selectAll(".bar")
+                .data(function(d) { return [d]; })
+                .transition()
+                .duration(300)
+                .style("fill", function(d, i) { return fill(i); })
                 .attr("width", function(d) { return x(d.referrers.length); })
                 .attr("height", y.rangeBand()/2)
-                .attr("y", y.rangeBand()/4)
-                .style("fill", function(d, i) { return fill(i); });
+                .attr("y", y.rangeBand()/4);
 
-            barGroup.append("text") 
+            barGroup.selectAll(".count") 
+                .data(function(d) { return [d]; })
+                .text(function(d) { return d.referrers.length; })
+                .transition()
+                .duration(300)
+                .attr("x", function(d) { return x(d.referrers.length); })
+                .attr("y", y.rangeBand()/2);
+
+            barGroup.selectAll(".label")
+                .data(function(d) { return [d]; })
+                .text(function(d) { return d.paper.title; })
+                .transition()
+                .duration(300)
+                .attr("y", y.rangeBand()*3/4);
+
+            // enter
+            var enter = barGroup.enter()
+                .append("g")
+                .attr("class", "bar-group")
+                .attr("transform", function(d, i) { return "translate(0, " + y(i) + ")"; })
+                .on("mouseover", function(d) {
+                    controller.mouseOnSinglePaper(d.paper);
+                })
+                .on("mouseout", function(d) {
+                    controller.mouseOutSinglePaper(d.paper);
+                })
+                .on("click", function(d) {
+                    controller.updateCurrentPaper(d.paper);
+                });
+
+            enter.append("rect") 
+                .attr("class", "bar")
+                .attr("y", y.rangeBand()/4)
+                .style("fill", function(d, i) { return fill(i); })
+                .attr("height", y.rangeBand()/2)
+                .attr("width", "0px")
+                .transition()
+                .duration(300)
+                .attr("width", function(d) { return x(d.referrers.length); });
+
+            enter.append("text") 
                 .attr("class", "count")
                 .attr("dominant-baseline", "central")
                 .attr("text-anchor", "end")
-                .attr("x", function(d) { return x(d.referrers.length); })
                 .attr("dx", "-3px")
                 .attr("y", y.rangeBand()/2)
                 .style("font-size", "6px")
                 .style("fill", "white")
-                .text(function(d) { return d.referrers.length; });
+                .text(function(d) { return d.referrers.length; })
+                .attr("x", "0px")
+                .transition()
+                .duration(300)
+                .attr("x", function(d) { return x(d.referrers.length); });
 
-            barGroup.append("text")
+            enter.append("text")
                 .attr("class", "label")
                 .attr("y", y.rangeBand()*3/4)
                 .attr("dominant-baseline", "text-before-edge")
                 .style("font-size", "11px")
-                .text(function(d) { return d.paper.title; });
+                .text(function(d) { return d.paper.title; })
+                .attr("fill-opacity", 0)
+                .transition()
+                .duration(300)
+                .attr("fill-opacity", 1);
 
-            barGroup.exit()
+            // exit
+            var exit = barGroup.exit();
+
+            exit.selectAll(".bar")
+                .transition()
+                .duration(300)
+                .attr("width", "0px");
+
+            exit.selectAll(".count")
+                .transition()
+                .duration(300)
+                .attr("x", "0px")
+                .attr("fill-opacity", 0);;
+
+            exit.selectAll(".label")
+                .text(function(d) { return d.paper.title; })
+                .transition()
+                .duration(300)
+                .attr("fill-opacity", 0);
+
+            exit.transition()
+                .delay(300)
                 .remove();
         }
 
