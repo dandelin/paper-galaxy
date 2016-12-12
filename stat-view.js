@@ -136,7 +136,7 @@ var StatView = (function() {
                 .attr("transform", function(d) { return "translate(" + (x(d.y.index)+x.rangeBand()/2) + ",0) rotate(-45)"; })
                 .attr("dx", "2em")
                 .attr("text-anchor", "start")
-                .attr("font-size", "3px")
+                .attr("font-size", "6px")
                 .style("user-select", "none")
                 .text(function(d) { return d.y.name; })
                 .on("mouseover", function(d) {
@@ -158,7 +158,7 @@ var StatView = (function() {
                 .attr("y", x.rangeBand() / 2)
                 .attr("dx", "-1em")
                 .attr("text-anchor", "end")
-                .attr("font-size", "3px")
+                .attr("font-size", "6px")
                 .style("user-select", "none")
                 .text(function(d) { return d.y.name; })
                 .on("mouseover", function(d) {
