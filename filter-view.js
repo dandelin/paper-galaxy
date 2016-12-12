@@ -119,7 +119,7 @@ FilterView.prototype = {
       .data(this.keywordFilterList);
     
     element.enter().append("span")
-      .attr("class", "keyword label label-info")
+      .attr("class", "keyword label label-primary")
       .text(function(d) {return d;})
       .style("cursor", "pointer")
       .on("click", function() {

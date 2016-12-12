@@ -32,7 +32,7 @@ var DetailView = (function() {
                 .data(newPaper.authors)
                 .enter()
                 .append("span")
-                .attr("class", "author label label-info")
+                .attr("class", "author label label-primary")
                 .html(function(d) { return d.name; })
                 .on('mouseenter', function(d){
                     controller.mouseOnAuthor(d.name);
@@ -47,7 +47,7 @@ var DetailView = (function() {
                 .data(newPaper.author_tags)
                 .enter()
                 .append("span")
-                .attr("class", "author-tag label label-info")
+                .attr("class", "author-tag label label-primary")
                 .html(function(d) { return d; });
             selectors.citation_count.html(newPaper.citation_count);
             selectors.abstract.html(newPaper.abstract);

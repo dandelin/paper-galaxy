@@ -119,7 +119,7 @@ html, body {
 }
 
 #stat-view #year-svg .bar {
-    fill: midnightblue;
+    fill: #333;
 }
 
 #stat-view #year-svg .axis {
@@ -168,7 +168,7 @@ html, body {
 
 .sliderFilter .slider_hist .bar {
     margin: auto;
-    fill: midnightblue;
+    fill: #333;
 }
 
 .searchFilter {
