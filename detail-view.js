@@ -32,7 +32,7 @@ var DetailView = (function() {
                 .data(newPaper.authors)
                 .enter()
                 .append("span")
-                .attr("class", "author label label-info")
+                .attr("class", "author label label-primary")
                 .html(function(d) { return d.name; })
                 .style("cursor", "pointer")
                 .on('mouseenter', function(d){
@@ -48,8 +48,9 @@ var DetailView = (function() {
                 .data(newPaper.author_tags)
                 .enter()
                 .append("span")
-                .attr("class", "author-tag label label-info")
+                .attr("class", "author-tag label label-primary")
                 .html(function(d) { return d; })
+                .style("cursor", "pointer")
                 .on("mouseover", function(word) {
                     var paperIds = controller.paperList.map(function(d) { return d.id; });
                     controller.mouseOnMultipleCircles(d3.selectAll(".paper")
@@ -65,8 +66,6 @@ var DetailView = (function() {
                     controller.updateSelectedCircles(d3.selectAll(".paper")
                         .filter(function(paper) { return paper.author_tags.includes(word) && paperIds.includes(paper.id); }));
                 });
-            selectors.citation_count.html(newPaper.citation_count);
-            selectors.abstract.html(newPaper.abstract);
         },
     };
 })();
