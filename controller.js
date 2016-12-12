@@ -1,5 +1,5 @@
 var defaultColor = "#dddddd";
-var lassoColor = "#fff080";
+var lassoColor = "#F9D000";
 var selectedColor = "#f19f4d";
 var hoverColor = "#ec576b";
 
