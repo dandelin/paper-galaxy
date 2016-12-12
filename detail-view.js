@@ -17,7 +17,15 @@ var DetailView = (function() {
     attributes.forEach(function(attribute) {
         addAttribute(attribute);
     });
-        
+
+    var citedbyButton = view.append("button")
+        .attr("class", "cited-by-button btn btn-default btn-sm")
+        .html("Cited By");
+
+    var referencesButton = view.append("button")
+        .attr("class", "references-button btn btn-default btn-sm")
+        .html("References");
+
     return {
         update: function(newPaper) {
             // update view contents
@@ -68,6 +76,32 @@ var DetailView = (function() {
                 });
             selectors.citation_count.html(newPaper.citation_count);
             selectors.abstract.html(newPaper.abstract);
+
+            citedbyButton.on("mouseover", function() {
+                controller.mouseOnMultipleCircles(d3.selectAll(".paper")
+                    .filter(function(paper) { return newPaper.cited_by.includes(paper.id); }));
+            });
+            citedbyButton.on("mouseout", function() {
+                controller.mouseOutMultipleCircles(d3.selectAll(".paper")
+                    .filter(function(paper) { return newPaper.cited_by.includes(paper.id); }));
+            });
+            citedbyButton.on("click", function() {
+                controller.updateSelectedCircles(d3.selectAll(".paper")
+                    .filter(function(paper) { return newPaper.cited_by.includes(paper.id); }));
+            });
+
+            referencesButton.on("mouseover", function() {
+                controller.mouseOnMultipleCircles(d3.selectAll(".paper")
+                    .filter(function(paper) { return newPaper.references.includes(paper.id); }));
+            });
+            referencesButton.on("mouseout", function() {
+                controller.mouseOutMultipleCircles(d3.selectAll(".paper")
+                    .filter(function(paper) { return newPaper.references.includes(paper.id); }));
+            });
+            referencesButton.on("click", function() {
+                controller.updateSelectedCircles(d3.selectAll(".paper")
+                    .filter(function(paper) { return newPaper.references.includes(paper.id); }));
+            });
         },
     };
 })();
