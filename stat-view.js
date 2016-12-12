@@ -54,31 +54,43 @@ var StatView = (function() {
             if (!selectedPapers || selectedPapers.length == 0) { return; }
 
             var matrixLength = width > height ? width * 0.75 : height * 0.75;
-            var matrixMargin = {top: height * 0.25, bottom: 0, left: width * 0.25, right: 0};
+            var matrixMargin = {top: height * 0.20, bottom: 0, left: width * 0.22, right: 0};
             var x = d3.scale.ordinal().rangeBands([0, matrixLength]);
             var z = d3.scale.linear().range([0, 1]);
 
             // authorDic will contain author info and index to matrix row
             // matrix will contain co-occurence matrix
-            var authorDic = {}, matrix = [], index=0;
+            var authorDic = {}, authorList = [], matrix = [], index=0;
 
             // find every authors and allocate index
             selectedPapers.forEach(function(paper) {
                 paper.authors.forEach(function(author) {
                     if(!authorDic[author.id]) {
                         authorDic[author.id] = author;
-                        authorDic[author.id].index = index++;
+                        authorDic[author.id].count = 1;
+                    } else {
+                        authorDic[author.id].count++;
                     }
                 });
             });
 
-            // allocate cell objects to matrix while leaving occurence frequency (z here) to 0
             Object.keys(authorDic).forEach(function(authorId) {
-                matrix[authorDic[authorId].index] = {
-                    y: authorDic[authorId],
-                    cells: Object.keys(authorDic)
-                        .map(function(authorId2) { return {x: authorDic[authorId2], z: 0}; })
-                        .sort(function(a, b) { return a.x.index - b.x.index; })
+                authorList.push(authorDic[authorId]);
+            });
+            authorList.sort(function(a,b) { return b.count - a.count; });
+            authorList = authorList.slice(0, 20);
+            authorList.forEach(function(author, i) {
+                author.index = i;
+            });
+            var authorIdList = authorList.map(function(author) { return author.id; });
+            console.log(authorList);
+
+            // allocate cell objects to matrix while leaving occurence frequency (z here) to 0
+            authorList.forEach(function(author) {
+                matrix[author.index] = {
+                    y: author,
+                    cells: authorList
+                        .map(function(author2) { return {x: author2, z: 0}; })
                 };
             });
 
@@ -86,18 +98,21 @@ var StatView = (function() {
             selectedPapers.forEach(function(paper) {
                 paper.authors.forEach(function(author, i) {
                     paper.authors.forEach(function(author2, j) {
+                        if(!authorIdList.includes(author.id) || !authorIdList.includes(author2.id)) {
+                            return;
+                        }
                         if (i==j) {
-                            matrix[authorDic[author.id].index].cells[authorDic[author2.id].index].z += 1/paper.authors.length;
+                            matrix[authorIdList.indexOf(author.id)].cells[authorIdList.indexOf(author2.id)].z += 1/paper.authors.length;
                         }
                         if (i<j) {
-                            matrix[authorDic[author.id].index].cells[authorDic[author2.id].index].z += 1/paper.authors.length;
-                            matrix[authorDic[author2.id].index].cells[authorDic[author.id].index].z += 1/paper.authors.length;
+                            matrix[authorIdList.indexOf(author.id)].cells[authorIdList.indexOf(author2.id)].z += 1/paper.authors.length;
+                            matrix[authorIdList.indexOf(author2.id)].cells[authorIdList.indexOf(author.id)].z += 1/paper.authors.length;
                         }
                     });
                 });
             });
 
-            x.domain(Object.keys(authorDic).map(function(authorId) { return authorDic[authorId].index; }));
+            x.domain(authorList.map(function(author) { return author.index; }));
             z.domain([0, d3.max([].concat.apply([], matrix.map(function(row) { return row.cells; })).map(function(cell) { return cell.z; }))]);
 
             var container = cooccurSvg.select("g")
@@ -177,10 +192,10 @@ var StatView = (function() {
             var fill = d3.scale.category10();
             var size = d3.scale.linear().domain([d3.min(tagList, function(d) { return Math.pow(d.papers.length, 2); })-1,d3.max(tagList, function(d) { return Math.pow(d.papers.length, 2); })+2]).range([6, 28]);
             if(tagList[0].tag.length > 18) {
-                size.range([6, 18]);
+                size.range([6, 19]);
             }
             var layout = d3.layout.cloud()
-                .size([width*1.2, height])
+                .size([width, height])
                 .words(tagList)
                 .padding(3)
                 .rotate(function(d) { return 0; })
