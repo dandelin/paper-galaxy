@@ -333,15 +333,19 @@ var StatView = (function() {
                 return bins[a].length > bins[b].length ? a : b 
             })].length;
 
-            var x = d3.scale.ordinal().domain(d3.extent(years)),
-                y = d3.scale.linear().domain([height, 0]);
-            var xAxis = d3.svg.axis().scale(x).orient("bottme"),
-                yAxis = d3.svg.axis().scale(y).orient("left");
+            var axisSize = {x: 10, y: 15};
+            var svgWidth = width - axisSize.y;
+            var svgHeight = height - axisSize.x;
+
+            var x = d3.scale.ordinal().domain(years).rangeBands([0, svgWidth]),
+                y = d3.scale.linear().domain([max, 0]).range([0, svgHeight]).nice();
+            var xAxis = d3.svg.axis().scale(x).orient("bottom"),
+                yAxis = d3.svg.axis().scale(y).orient("left").tickFormat(d3.format("d"));
             
             var gridMargin = 10;
-            var gridSize = Math.ceil((width - gridMargin) / years.length) - gridMargin;
-            var g = yearSvg.select("g");
-            g.selectAll(".bar").remove();
+            var gridSize = Math.ceil((svgWidth - gridMargin) / years.length) - gridMargin;
+            var g = yearSvg.select("g")
+                .attr("transform", "translate("+ (margin.left + axisSize.y) +","+margin.top+")");
             var bars = g.selectAll(".bar").data(years);
 
             bars.enter().append("rect")
@@ -349,14 +353,39 @@ var StatView = (function() {
                 .attr("x", function(d, i) { return gridMargin + i * (gridSize + gridMargin); })
                 .attr("width", gridSize)
                 .attr("y", function(d) {
-                    return height * (1- bins[d].length / max);
+                    return svgHeight * (1- bins[d].length / max);
                 })
                 .attr("height", function(d) {
-                    return height * (bins[d].length / max);
+                    return svgHeight * (bins[d].length / max);
                 })
                 .attr("rx", 1)
                 .attr("ry", 1);
 
+            bars.transition()
+                .attr("x", function(d, i) { return gridMargin + i * (gridSize + gridMargin); })
+                .attr("width", gridSize)
+                .attr("y", function(d) {
+                    return svgHeight * (1- bins[d].length / max);
+                })
+                .attr("height", function(d) {
+                    return svgHeight * (bins[d].length / max);
+                });
+
+            bars.exit().remove();
+
+            if (g.selectAll(".axis")[0].length == 0) {
+                g.append("g")
+                .attr("class", "axis axis--x")
+                .attr("transform", "translate(0," + svgHeight + ")")
+                .call(xAxis);
+
+                g.append("g")
+                .attr("class", "axis axis--y")
+                .call(yAxis);
+            } else {
+                g.selectAll(".axis--x").transition().call(xAxis);
+                g.selectAll(".axis--y").transition().call(yAxis);
+            }
         }
     }
 

@@ -116,6 +116,12 @@ html, body {
     fill: midnightblue;
 }
 
+#stat-view #year-svg .axis {
+    stroke: black;
+    font-size: 8px;
+    fill: none;
+}
+
 .padding-0 {
     padding: 0 !important;
     margin: 0 !important;
