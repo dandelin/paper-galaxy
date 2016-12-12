@@ -65,7 +65,7 @@ FilterView.prototype = {
         var detailContent = detailDiv.append("ul")
           .attr("class", "list-group")
           .selectAll("li")
-          .data(d.list.splice(0, detailSize))
+          .data(d.list.slice(0, detailSize))
           .enter().append("li")
           .attr("class", "detailElm list-group-item");
         detailContent.append("div")
