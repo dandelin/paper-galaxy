@@ -66,6 +66,7 @@ var DetailView = (function() {
                     controller.updateSelectedCircles(d3.selectAll(".paper")
                         .filter(function(paper) { return paper.author_tags.includes(word) && paperIds.includes(paper.id); }));
                 });
+            selectors.citation_count.html(newPaper.citation_count);
             selectors.abstract.html(newPaper.abstract);
         },
     };
