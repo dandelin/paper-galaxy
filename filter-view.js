@@ -61,10 +61,11 @@ FilterView.prototype = {
           .attr("class", "search_details panel panel-default")
           .style("opacity", "0")
           .style("left", (offsetWidth+10) + "px");
+        var detailSize = d.list.length > 100 ? 100 : d.list.length;
         var detailContent = detailDiv.append("ul")
           .attr("class", "list-group")
           .selectAll("li")
-          .data(d.list)
+          .data(d.list.splice(0, detailSize))
           .enter().append("li")
           .attr("class", "detailElm list-group-item");
         detailContent.append("div")
