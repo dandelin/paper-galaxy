@@ -83,7 +83,6 @@ var StatView = (function() {
                 author.index = i;
             });
             var authorIdList = authorList.map(function(author) { return author.id; });
-            console.log(authorList);
 
             // allocate cell objects to matrix while leaving occurence frequency (z here) to 0
             authorList.forEach(function(author) {
@@ -130,13 +129,28 @@ var StatView = (function() {
                 .selectAll(".row")
                 .data(matrix);
 
+            var paperIds = controller.paperList.map(function(d) { return d.id; });
+
             // column text
             row.enter().append("text")
                 .attr("transform", function(d) { return "translate(" + (x(d.y.index)+x.rangeBand()/2) + ",0) rotate(-45)"; })
                 .attr("dx", "2em")
                 .attr("text-anchor", "start")
                 .attr("font-size", "3px")
-                .text(function(d) { return d.y.name; });
+                .style("user-select", "none")
+                .text(function(d) { return d.y.name; })
+                .on("mouseover", function(d) {
+                    controller.mouseOnMultipleCircles(d3.selectAll(".paper")
+                        .filter(function(paper) { return paper.authors.map(function(d) { return d.id; }).includes(d.y.id); }));
+                })
+                .on("mouseout", function(d) {
+                    controller.mouseOutMultipleCircles(d3.selectAll(".paper")
+                        .filter(function(paper) { return paper.authors.map(function(d) { return d.id; }).includes(d.y.id); }));
+                })
+                .on("click", function(d) {
+                    controller.updateSelectedCircles(d3.selectAll(".paper")
+                        .filter(function(paper) { return paper.authors.map(function(d) { return d.id; }).includes(d.y.id); }));
+                });
             
             // row text
             row.enter().append("text")
@@ -145,7 +159,20 @@ var StatView = (function() {
                 .attr("dx", "-1em")
                 .attr("text-anchor", "end")
                 .attr("font-size", "3px")
-                .text(function(d) { return d.y.name; });
+                .style("user-select", "none")
+                .text(function(d) { return d.y.name; })
+                .on("mouseover", function(d) {
+                    controller.mouseOnMultipleCircles(d3.selectAll(".paper")
+                        .filter(function(paper) { return paper.authors.map(function(d) { return d.id; }).includes(d.y.id); }));
+                })
+                .on("mouseout", function(d) {
+                    controller.mouseOutMultipleCircles(d3.selectAll(".paper")
+                        .filter(function(paper) { return paper.authors.map(function(d) { return d.id; }).includes(d.y.id); }));
+                })
+                .on("click", function(d) {
+                    controller.updateSelectedCircles(d3.selectAll(".paper")
+                        .filter(function(paper) { return paper.authors.map(function(d) { return d.id; }).includes(d.y.id); }));
+                });
 
             row.enter().append("g")
                 .attr("class", "row")
