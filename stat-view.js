@@ -136,9 +136,10 @@ var StatView = (function() {
                 .attr("transform", function(d) { return "translate(" + (x(d.y.index)+x.rangeBand()/2) + ",0) rotate(-45)"; })
                 .attr("dx", "2em")
                 .attr("text-anchor", "start")
-                .attr("font-size", "3px")
+                .attr("font-size", "6px")
                 .style("user-select", "none")
                 .text(function(d) { return d.y.name; })
+                .style("cursor", "pointer")
                 .on("mouseover", function(d) {
                     controller.mouseOnMultipleCircles(d3.selectAll(".paper")
                         .filter(function(paper) { return paper.authors.map(function(d) { return d.id; }).includes(d.y.id); }));
@@ -158,9 +159,10 @@ var StatView = (function() {
                 .attr("y", x.rangeBand() / 2)
                 .attr("dx", "-1em")
                 .attr("text-anchor", "end")
-                .attr("font-size", "3px")
+                .attr("font-size", "6px")
                 .style("user-select", "none")
                 .text(function(d) { return d.y.name; })
+                .style("cursor", "pointer")
                 .on("mouseover", function(d) {
                     controller.mouseOnMultipleCircles(d3.selectAll(".paper")
                         .filter(function(paper) { return paper.authors.map(function(d) { return d.id; }).includes(d.y.id); }));
@@ -265,6 +267,7 @@ var StatView = (function() {
                             //controller.updateSelectedCircles(d3.selectAll(".paper")
                                 //.filter(function(paper) { return paperIds.includes(paper.id); }));
                         })
+                        .style("cursor", "pointer")
                         .transition("wordle-enter")
                         .duration(300)
                         .style("font-size", function(d) { return d.size+"px"; })
@@ -360,6 +363,7 @@ var StatView = (function() {
                 .append("g")
                 .attr("class", "bar-group")
                 .attr("transform", function(d, i) { return "translate(0, " + y(i) + ")"; })
+                .style("cursor", "pointer")
                 .on("mouseover", function(d) {
                     controller.mouseOnSinglePaper(d.paper);
                 })

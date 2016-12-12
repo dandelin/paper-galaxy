@@ -34,6 +34,7 @@ var DetailView = (function() {
                 .append("span")
                 .attr("class", "author label label-primary")
                 .html(function(d) { return d.name; })
+                .style("cursor", "pointer")
                 .on('mouseenter', function(d){
                     controller.mouseOnAuthor(d.name);
                 })
@@ -48,9 +49,23 @@ var DetailView = (function() {
                 .enter()
                 .append("span")
                 .attr("class", "author-tag label label-primary")
-                .html(function(d) { return d; });
-            selectors.citation_count.html(newPaper.citation_count);
-            selectors.abstract.html(newPaper.abstract);
+                .html(function(d) { return d; })
+                .style("cursor", "pointer")
+                .on("mouseover", function(word) {
+                    var paperIds = controller.paperList.map(function(d) { return d.id; });
+                    controller.mouseOnMultipleCircles(d3.selectAll(".paper")
+                        .filter(function(paper) { return paper.author_tags.includes(word) && paperIds.includes(paper.id); }));
+                })
+                .on("mouseout", function(word) {
+                    var paperIds = controller.paperList.map(function(d) { return d.id; });
+                    controller.mouseOutMultipleCircles(d3.selectAll(".paper")
+                        .filter(function(paper) { return paper.author_tags.includes(word) && paperIds.includes(paper.id); }));
+                })
+                .on("click", function(word) {
+                    var paperIds = controller.paperList.map(function(d) { return d.id; });
+                    controller.updateSelectedCircles(d3.selectAll(".paper")
+                        .filter(function(paper) { return paper.author_tags.includes(word) && paperIds.includes(paper.id); }));
+                });
         },
     };
 })();
