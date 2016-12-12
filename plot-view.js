@@ -105,9 +105,10 @@ var PlotView = (function() {
             .attr('x2', function(d) { return d.x})
             .attr('y2', function(d) { return d.y})
             .attr('stroke', function(d){
-                if(d.cited_by === true) return 'steelblue';
-                else return "#ff7f0e";
+                if(d.cited_by === true) return 'lightblue';
+                else return "#9f87d6";
             })
+            .attr('stroke-width', "1.25px")
             .attr('stroke-opacity', function(d){
                 var ret = d3.select('#p' + d.id).attr('opacity');
                 if(ret == null) return 1;
@@ -152,7 +153,6 @@ var PlotView = (function() {
                 .attr("height", height)
                 .style("display", "block")
                 .style("margin", "auto")
-                .style('background', '#eeeeee')
                 .call(zoom);
 
             d3.selectAll('svg').append('g').attr('id', 'links');
@@ -169,6 +169,8 @@ var PlotView = (function() {
                 .attr("cx", function(d) { return x(d.vec2[0]); })
                 .attr("cy", function(d) { return y(d.vec2[1]); })
                 .attr("r", function(d) { return r(d.citation_count); })
+                .attr("stroke", "#333333")
+                .attr("stroke-width", "0.25px")
                 .attr("fill", defaultColor)
                 //.attr("fill", function(d) {
                   //var color = d3.scale.category20().domain(topTags);

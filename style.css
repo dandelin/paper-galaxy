@@ -45,11 +45,11 @@ html, body {
 
 #plot-view {
     height: 100%;
-    background-color: #eee;
+    background-color: #333;
 }
 
 #plot-view > svg {
-    background-color: #eee;
+    background-color: #333;
 }
 
 #selected-view {

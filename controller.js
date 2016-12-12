@@ -1,7 +1,7 @@
-var defaultColor = "#333333";
-var lassoColor = "ec576b";
+var defaultColor = "#dddddd";
+var lassoColor = "#fff080";
 var selectedColor = "#f19f4d";
-var hoverColor = "#f9cf00";
+var hoverColor = "#ec576b";
 
 function Controller() {
     this.paperList;
