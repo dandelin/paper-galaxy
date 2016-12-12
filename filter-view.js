@@ -61,10 +61,11 @@ FilterView.prototype = {
           .attr("class", "search_details panel panel-default")
           .style("opacity", "0")
           .style("left", (offsetWidth+10) + "px");
+        var detailSize = d.list.length > 100 ? 100 : d.list.length;
         var detailContent = detailDiv.append("ul")
           .attr("class", "list-group")
           .selectAll("li")
-          .data(d.list)
+          .data(d.list.slice(0, detailSize))
           .enter().append("li")
           .attr("class", "detailElm list-group-item");
         detailContent.append("div")
@@ -90,6 +91,12 @@ FilterView.prototype = {
           .ease("quad")
           .style("opacity", "1");
       })
+      .on("wheel", function() {
+        var div = d3.select("body").select(".search_details")[0];
+        if (div && div.length > 0) {
+          div[0].scrollTop -= d3.event.wheelDeltaY * .3;
+        }
+      }, {passive: true})
       .on("mouseout", function() {
         var detailDiv = d3.select("body").selectAll(".search_details");
         detailDiv.transition()
