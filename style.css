@@ -17,6 +17,12 @@ html, body {
     background-color: #ddd;
 }
 
+#filter-view #filter-title {
+    margin-top: 5px;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
 #detail-view {
     height: 60%;
     overflow-x: hidden;
