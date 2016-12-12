@@ -9,6 +9,19 @@ html, body {
     display: relative;
 }
 
+#legend {
+    position: absolute;
+    right: 0px;
+    color: white;
+}
+
+#legend .color-box {
+    width: 10px;
+    height: 10px;
+    display: inline-block;
+    margin-right: 3px;
+}
+
 #filter-view {
     height: 40%;
     min-height: 380px;
