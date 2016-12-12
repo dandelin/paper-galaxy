@@ -34,6 +34,7 @@ var DetailView = (function() {
                 .append("span")
                 .attr("class", "author label label-info")
                 .html(function(d) { return d.name; })
+                .style("cursor", "pointer")
                 .on('mouseenter', function(d){
                     controller.mouseOnAuthor(d.name);
                 })
